@@ -9,7 +9,6 @@ class Domain():
         self.now_judging = False
 
     def push(self, curr_p, curr_t, curr_u):
-        
         #print(self.domain, " before ", curr_u, self.wq)
         for item in self.wq:
             if curr_u == item[-1]:
@@ -55,10 +54,12 @@ for _ in range(Q):
         t, p, u = inputline[1:]
         t, p = int(t), int(p)
         domain = u.split("/")[0]
-        domain_dict[domain] = Domain(domain=domain)
+        if domain not in domain_dict:
+            domain_dict[domain] = Domain(domain=domain)
         check = domain_dict[domain].push(p, t, u)
         if check:
             ans += 1
+            #print(domain, domain_dict[domain].wq)
 
     elif cmd == 300:
         t = int(inputline[1])
@@ -76,6 +77,7 @@ for _ in range(Q):
             domain_dict[domain].now_judging = True
             judging_domain[j_id] = domain
             domain_dict[domain].pop()
+            #print(domain, domain_dict[domain].wq)
             ans -= 1
 
     elif cmd == 400:
