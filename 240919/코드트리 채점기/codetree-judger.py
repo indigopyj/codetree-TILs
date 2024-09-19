@@ -1,5 +1,5 @@
 import heapq
-# from collections import defaultdict
+# from collections import deque
 MAX_T = 1000001
 MAX_N = 50001
 Q = int(input())
@@ -8,7 +8,8 @@ judge_cmd_list = []
 hq = []
 url_list = ['' for _ in range(MAX_T)]
 domain_dict = dict()
-job_judger = ['' for _ in range(MAX_N)]
+job_judger = []
+
 
 
 def is_available(curr_t, curr_domain, N):
@@ -21,11 +22,12 @@ def is_available(curr_t, curr_domain, N):
     return True
 
 
-def judger_exist(N):
-    for i, jj in enumerate(job_judger[:N+1]):
-        if i > 0 and jj == '':
-            return i
-    return -1
+# def judger_exist(N):
+#     job_judger
+#     for i, jj in enumerate(job_judger[:N+1]):
+#         if i > 0 and jj == '':
+#             return i
+#     return -1
 
 
 
@@ -67,6 +69,10 @@ for q in range(Q):
         pass
     cmd_list.append((cmd, t, J_id, p, u))
     
+# init. job judger
+for i in range(1, N+1):
+    heapq.heappush(job_judger, i) # number
+judging_domain = ['' for _ in range(N+1)]
 
 for jc in judge_cmd_list:
     # print(jc)
@@ -85,9 +91,9 @@ for jc in judge_cmd_list:
             if not is_available(curr_t, curr_domain, N):
                 tmp_hq.append((curr_p, start_t, curr_domain, curr_uid))
                 continue
-            J_id = judger_exist(N)
-            if J_id != -1:
-                job_judger[J_id] = curr_domain
+            if job_judger:
+                J_id = heapq.heappop(job_judger)
+                judging_domain[J_id] = curr_domain
                 domain_dict[curr_domain][0] = curr_t
                 # print(333, curr_t, J_id, curr_domain, job_judger[:N+1])
                 cmd_list.append((333, curr_t, J_id, -1, -1))
@@ -96,12 +102,12 @@ for jc in judge_cmd_list:
         for tmp in tmp_hq:
             heapq.heappush(hq, tmp)
     else:
-        domain = job_judger[J_id]
+        domain = judging_domain[J_id]
         if domain == '':
             continue
         domain_dict[domain][1] = curr_t - domain_dict[domain][0]
         # print(400, J_id, domain, domain_dict[domain])
-        job_judger[J_id] = ''
+        heapq.heappush(job_judger, J_id)
 
 cmd_list = sorted(cmd_list, key=lambda x:x[1])
 # print(cmd_list)
