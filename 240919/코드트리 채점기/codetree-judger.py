@@ -74,15 +74,17 @@ for jc in judge_cmd_list:
     if cmd == 300:
         curr_p, start_t, curr_domain, curr_uid = hq[0]
         curr_url = (curr_domain + '/' + str(curr_uid))
-        # print(curr_url, url_list[start_t+1:curr_t])
         if curr_url in url_list[start_t+1:curr_t]:
             cmd_list.append((222, start_t, -1, -1, -1)) # pass adding to queue
             # print(222, start_t)
             heapq.heappop(hq)
             continue
-        
-        if is_available(curr_t, curr_domain, N):
-            heapq.heappop(hq)
+        tmp_hq = []
+        while hq:
+            curr_p, start_t, curr_domain, curr_uid = heapq.heappop(hq)
+            if not is_available(curr_t, curr_domain, N):
+                tmp_hq.append((curr_p, start_t, curr_domain, curr_uid))
+                continue
             J_id = judger_exist(N)
             if J_id != -1:
                 job_judger[J_id] = curr_domain
@@ -90,6 +92,9 @@ for jc in judge_cmd_list:
                 # print(333, curr_t, J_id, curr_domain, job_judger[:N+1])
                 cmd_list.append((333, curr_t, J_id, -1, -1))
                 url_list[start_t] = ''
+            break
+        for tmp in tmp_hq:
+            heapq.heappush(hq, tmp)
     else:
         domain = job_judger[J_id]
         if domain == '':
