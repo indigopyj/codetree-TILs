@@ -100,8 +100,9 @@ for q in range(Q):
         tmp_hq = []
         for d_i, domain_info in domain_dict.items():
             if domain_info.check_judge(t):
-                priority, input_time, url = domain_info.waiting_queue[0]
-                heapq.heappush(tmp_hq, (priority, input_time, d_i))
+                if domain_info.waiting_queue:
+                    priority, input_time, url = domain_info.waiting_queue[0]
+                    heapq.heappush(tmp_hq, (priority, input_time, d_i))
         if tmp_hq and job_judger:
             j_id = heapq.heappop(job_judger)
             _, _, d_i = tmp_hq[0]
