@@ -103,9 +103,9 @@ for q in range(Q):
                 if domain_info.waiting_queue:
                     priority, input_time, url = domain_info.waiting_queue[0]
                     heapq.heappush(tmp_hq, (priority, input_time, d_i))
-        #print(tmp_hq, job_judger[0])
         if tmp_hq and job_judger:
             j_id = heapq.heappop(job_judger)
+            # print("job starts: ", tmp_hq[0], j_id)
             _, _, d_i = tmp_hq[0]
             # print("job start: ", j_id, domain_dict[d_i])
             waiting_domain.discard(d_i)
@@ -120,10 +120,14 @@ for q in range(Q):
         # end scoring
         t, j_id = map(int, inputline[1:])
         d_i = judging_domain[j_id]
+        if d_i == '':
+            continue
         domain_dict[d_i].gap = t - domain_dict[d_i].start 
         domain_dict[d_i].now_judging = False
+        # print("job ends : ", j_id, domain_dict[d_i].gap)
         # domain_dict[d_i].print_()
         heapq.heappush(job_judger, j_id)
+        judging_domain[j_id] = ''
 
     else:
         # print num of tasks in queue
