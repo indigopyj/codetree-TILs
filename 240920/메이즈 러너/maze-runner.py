@@ -76,7 +76,7 @@ def find_small_square():
     people_list = set()
     for i in range(1, N+1):
         for j in range(1, N+1):
-            for k in range(1, N-max(i,j)):
+            for k in range(1, N-max(i,j)+1):
                 nx = [n for n in range(i, i+k+1)]
                 ny = [n for n in range(j, j+k+1)]
                 coords = list(product(*[nx, ny]))
