@@ -112,6 +112,8 @@ def find_small_square():
 total_move = 0
 for t in range(K):
     total_move += move()
+    if len(people) == 0:
+        break
     (sq_x1, sq_y1), (sq_x2, sq_y2), ppl = find_small_square()
     sliced_sq = []
     for x in range(sq_x1, sq_x2+1):
