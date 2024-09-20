@@ -12,7 +12,6 @@ for i in range(1, M+1):
     people[i] = (x,y)
 
 exit_x, exit_y = map(int, input().split())
-# grid[exit_x][exit_y] = -1
 
 def rotate(square, x1, y1, ppl):
     global exit_x, exit_y
@@ -21,14 +20,11 @@ def rotate(square, x1, y1, ppl):
     for r in range(n):
         for c in range(n):
             new_square[c][n-1-r] = max(square[r][c]-1, 0)
-    # print(ppl)
     for p in ppl:
         px, py = people[p]
-        #print("old px, py: ", px, py)
         px -= x1
         py -= y1
         people[p] = py+x1, n-1-px+y1
-        #print("new px, py: ", people[p])
         
     exit_x -= x1
     exit_y -= y1
@@ -59,7 +55,6 @@ def move():
                 min_dist = dist
                 min_d = d
         new_px, new_py = px + min_d[0], py + min_d[1]
-        # print(f"{px} {py} -> {new_px} {new_py}")
         total += abs(min_d[0] + min_d[1])
         people[p] = (new_px, new_py)
         if (new_px, new_py) == (exit_x, exit_y):
@@ -73,41 +68,24 @@ def move():
 def find_small_square():
     square_n = 20
     square_x, square_y = (20,20)
-    people_list = set()
-    for i in range(1, N+1):
-        for j in range(1, N+1):
-            for k in range(1, N-max(i,j)+1):
-                nx = [n for n in range(i, i+k+1)]
-                ny = [n for n in range(j, j+k+1)]
-                coords = list(product(*[nx, ny]))
-                #print(coords)
+    
+    for k in range(2, N+1):# size of square
+        for i1 in range(1, N-k+2):
+            for j1 in range(1, N-k+2):
+                people_list = set()
+                i2, j2 = i1+k-1, j1+k-1
+                if not (i1 <= exit_x <= i2 and j1 <= exit_y <= j2):
+                    continue
                 flag = False
                 tmp_people_list = set()
-                #print(people)
-                #print(i,j,k)
                 for p, (px, py) in people.items():
-                    if (px, py) in coords:
+                    if i1 <= px <= i2 and j1 <= py <= j2 :
                         flag = True
-                        tmp_people_list.add(p)
-                flag = flag and ((exit_x, exit_y) in coords)
+                        people_list.add(p)
+                
                 if flag:
-                    #print(square_x, square_y, square_n)
-                    if square_n == k:
-                        if square_x == i:
-                            if square_y <= j:
-                                continue
-                        elif square_x < i:
-                            continue
-                    elif square_n < k:
-                        continue
-                    square_x = i
-                    square_y = j
-                    square_n = k
-                    people_list = copy.deepcopy(tmp_people_list)
-    # print("final: ", (square_x, square_y, square_n))
-    sq_x1, sq_y1 = square_x, square_y
-    sq_x2, sq_y2 = square_x + square_n, square_y + square_n
-    return (sq_x1, sq_y1), (sq_x2, sq_y2), people_list
+                    return (i1, j1), (i2, j2), people_list 
+
 
 total_move = 0
 for t in range(K):
@@ -122,8 +100,7 @@ for t in range(K):
     rotated_sq = rotate(sliced_sq, sq_x1, sq_y1, ppl)
     for i in range(sq_x2+1-sq_x1):
         grid[i+sq_x1][sq_y1:sq_y2+1] = rotated_sq[i]
-    # for r in grid:
-    #     print(r)
+
 
     
     
