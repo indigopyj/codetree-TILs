@@ -25,8 +25,9 @@ class Rabbit():
         else:
             x = new_pos
         y = self.col
+        positions.append((x,y))
         #print(x,y)
-        heapq.heappush(positions, (-(x+y), -x, -y))
+        #heapq.heappush(positions, (-(x+y), -x, -y))
         # 하
         new_pos = self.row + d
         if new_pos > N-1:
@@ -38,8 +39,9 @@ class Rabbit():
         else:
             x = new_pos
         y = self.col
+        positions.append((x,y))
         #print(x,y)
-        heapq.heappush(positions, (-(x+y), -x, -y))
+        # heapq.heappush(positions, (-(x+y), -x, -y))
         # 좌
         new_pos = self.col - d
         if new_pos < 0:
@@ -51,8 +53,9 @@ class Rabbit():
         else:
             y = new_pos
         x = self.row
+        positions.append((x,y))
         #print(x,y)
-        heapq.heappush(positions, (-(x+y), -x, -y))
+        # heapq.heappush(positions, (-(x+y), -x, -y))
         # 하
         new_pos = self.col + d
         if new_pos > M-1:
@@ -64,13 +67,17 @@ class Rabbit():
         else:
             y = new_pos
         x = self.row
+        positions.append((x,y))
         #print(x,y)
-        heapq.heappush(positions, (-(x+y), -x, -y))
+        # heapq.heappush(positions, (-(x+y), -x, -y))
 
-        _, x, y = heapq.heappop(positions)
+        # _, x, y = heapq.heappop(positions)
         #print("rabbit move to ", -x, -y)
+        positions = sorted(positions, key=lambda p: (-p[0]-p[1], -p[0], -p[1]))
+        x, y = positions[0]
         self.n_jump += 1
-        self.row, self.col = -x, -y
+        # self.row, self.col = -x, -y
+        self.row, self.col = x, y
 
 
 
