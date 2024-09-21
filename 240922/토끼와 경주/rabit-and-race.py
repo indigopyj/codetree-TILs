@@ -80,14 +80,14 @@ rabbit_dict = dict()
 
 def race(K, S, N, M):
     global total_score
-    chosen_rabbit = set()
+    chosen_rabbit = []
     for k in range(K):
         first_jump = []
         for pid, rabbit in rabbit_dict.items():
             elem = (rabbit.n_jump, rabbit.row+rabbit.col, rabbit.row, rabbit.col, rabbit.pid)
             heapq.heappush(first_jump, elem)
         r_id = heapq.heappop(first_jump)[-1]
-        chosen_rabbit.add(r_id)
+        chosen_rabbit.append((rabbit_dict[r_id].row +rabbit_dict[r_id].col, rabbit_dict[r_id].row, rabbit_dict[r_id].col, rabbit_dict[r_id].pid))
         #print("choose ", r_id)
         rabbit_dict[r_id].move_rabbit(N, M)
         score = rabbit_dict[r_id].row + 1 + rabbit_dict[r_id].col + 1
@@ -107,11 +107,13 @@ def race(K, S, N, M):
         #     print()
     
     rabbits = []
-    for pid in list(chosen_rabbit):
-        rabbit = rabbit_dict[pid]
-        elem = (-rabbit.row - rabbit.col, -rabbit.row, -rabbit.col, -rabbit.pid)
-        heapq.heappush(rabbits, elem)
-    best_rabbit = -heapq.heappop(rabbits)[-1]
+    # for pid in list(chosen_rabbit):
+    #     rabbit = rabbit_dict[pid]
+    #     elem = (-rabbit.row - rabbit.col, -rabbit.row, -rabbit.col, -rabbit.pid)
+    #     heapq.heappush(rabbits, elem)
+    chosen_rabbit.sort(reverse=True)
+
+    best_rabbit = chosen_rabbit[0][-1] #-heapq.heappop(rabbits)[-1]
     scores[best_rabbit] += S
     #rabbit_dict[best_rabbit].score += S
     #print(f"best rabbit {best_rabbit} score {rabbit_dict[best_rabbit].score}")
