@@ -2,121 +2,94 @@ import heapq
 
 dirs = [(-1,0), (1,0), (0,-1), (0,1)]
 total_score = 0
-scores = []
-class Rabbit():
-    def __init__(self, pid, d):
-        self.pid = pid
-        self.d = d
-        self.row = 0
-        self.col = 0
-        self.n_jump=0
-        self.score=0
-    
-    def move_rabbit(self, N, M):
-        d = self.d
-        positions = []
-        # 상
-        new_pos = self.row - d
-        if new_pos < 0:
-            q, r = divmod(-new_pos, N-1)
-            if q % 2 == 0:
-                x = r
-            else:
-                x = N - 1 - r
-        else:
-            x = new_pos
-        y = self.col
-        #print(x,y)
-        heapq.heappush(positions, (-(x+y), -x, -y))
-        # 하
-        new_pos = self.row + d
-        if new_pos > N-1:
-            q, r = divmod(new_pos - N+1, N-1)
-            if q % 2 == 0:
-                x = N-1 - r
-            else:
-                x = r
-        else:
-            x = new_pos
-        y = self.col
-        #print(x,y)
-        heapq.heappush(positions, (-(x+y), -x, -y))
-        # 좌
-        new_pos = self.col - d
-        if new_pos < 0:
-            q, r = divmod(-new_pos, M-1)
-            if q % 2 == 0:
-                y = r
-            else:
-                y = M - 1 - r
-        else:
-            y = new_pos
-        x = self.row
-        #print(x,y)
-        heapq.heappush(positions, (-(x+y), -x, -y))
-        # 하
-        new_pos = self.col + d
-        if new_pos > M-1:
-            q, r = divmod(new_pos - M+1, M-1)
-            if q % 2 == 0:
-                y = M-1 - r
-            else:
-                y = r
-        else:
-            y = new_pos
-        x = self.row
-        #print(x,y)
-        heapq.heappush(positions, (-(x+y), -x, -y))
+scores = {}
+dists = {}
+rabbits = []
 
-        _, x, y = heapq.heappop(positions)
-        #print("rabbit move to ", -x, -y)
-        self.n_jump += 1
-        self.row, self.col = -x, -y
+    
+def move_rabbit(pid, row, col, N, M):
+    d = dists[pid]
+    positions = []
+    # 상
+    new_pos = row - d
+    if new_pos < 0:
+        q, r = divmod(-new_pos, N-1)
+        if q % 2 == 0:
+            x = r
+        else:
+            x = N - 1 - r
+    else:
+        x = new_pos
+    y = col
+    #print(x,y)
+    heapq.heappush(positions, (-(x+y), -x, -y))
+    # 하
+    new_pos = row + d
+    if new_pos > N-1:
+        q, r = divmod(new_pos - N+1, N-1)
+        if q % 2 == 0:
+            x = N-1 - r
+        else:
+            x = r
+    else:
+        x = new_pos
+    y = col
+    #print(x,y)
+    heapq.heappush(positions, (-(x+y), -x, -y))
+    # 좌
+    new_pos = col - d
+    if new_pos < 0:
+        q, r = divmod(-new_pos, M-1)
+        if q % 2 == 0:
+            y = r
+        else:
+            y = M - 1 - r
+    else:
+        y = new_pos
+    x = row
+    #print(x,y)
+    heapq.heappush(positions, (-(x+y), -x, -y))
+    # 하
+    new_pos = col + d
+    if new_pos > M-1:
+        q, r = divmod(new_pos - M+1, M-1)
+        if q % 2 == 0:
+            y = M-1 - r
+        else:
+            y = r
+    else:
+        y = new_pos
+    x = row
+    #print(x,y)
+    heapq.heappush(positions, (-(x+y), -x, -y))
+
+    _, x, y = heapq.heappop(positions)
+    return (-x, -y)
 
 
 
 Q = int(input())
-rabbit_dict = dict()
 
 def race(K, S, N, M):
-    global total_score
+    global total_score, rabbits
     chosen_rabbit = []
     for k in range(K):
-        first_jump = []
-        for pid, rabbit in rabbit_dict.items():
-            elem = (rabbit.n_jump, rabbit.row+rabbit.col, rabbit.row, rabbit.col, rabbit.pid)
-            heapq.heappush(first_jump, elem)
-        r_id = heapq.heappop(first_jump)[-1]
-        chosen_rabbit.append((rabbit_dict[r_id].row +rabbit_dict[r_id].col, rabbit_dict[r_id].row, rabbit_dict[r_id].col, rabbit_dict[r_id].pid))
+        n_jump, sum_rc, row, col, pid  = heapq.heappop(rabbits)
+        chosen_rabbit.append((sum_rc, row, col, pid))
         #print("choose ", r_id)
-        rabbit_dict[r_id].move_rabbit(N, M)
-        score = rabbit_dict[r_id].row + 1 + rabbit_dict[r_id].col + 1
+        new_row, new_col = move_rabbit(pid, row, col, N, M)
+        score = new_row + 1 + new_col + 1
+        n_jump += 1
         
-        scores[r_id] -= score
+        scores[pid] -= score
         total_score += score
-        #print(score)
-
-        # for pid in rabbit_dict:
-        #     if pid == r_id:
-        #         #print(f"{pid} score : {rabbit_dict[pid].score}")
-        #         print(f"{pid} scores  : {scores[pid]}")
-        #         continue
-        #     rabbit_dict[pid].score += score
-        #     print(f"{pid} score : {rabbit_dict[pid].score}")
-            
-        #     print()
+        heapq.heappush(rabbits, (n_jump, new_row+new_col, new_row, new_col, pid))
     
-    rabbits = []
-    # for pid in list(chosen_rabbit):
-    #     rabbit = rabbit_dict[pid]
-    #     elem = (-rabbit.row - rabbit.col, -rabbit.row, -rabbit.col, -rabbit.pid)
-    #     heapq.heappush(rabbits, elem)
     chosen_rabbit.sort(reverse=True)
 
-    best_rabbit = chosen_rabbit[0][-1] #-heapq.heappop(rabbits)[-1]
+    best_rabbit = chosen_rabbit[0][-1] 
     scores[best_rabbit] += S
-    #rabbit_dict[best_rabbit].score += S
-    #print(f"best rabbit {best_rabbit} score {rabbit_dict[best_rabbit].score}")
+    
     return
 
 for _ in range(Q):
@@ -125,25 +98,21 @@ for _ in range(Q):
         N, M, P = inputline[1:4]
         pids = inputline[4::2]
         ds = inputline[5::2]
-        scores = {}
+        # (현재까지의 총 점프 횟수가 적은 토끼, 현재 서있는 행 번호 + 열 번호가 작은 토끼, 행 번호가 작은 토끼, 열 번호가 작은 토끼, 고유번호가 작은 토끼)
         for p in range(P):
-            rabbit_dict[pids[p]] = Rabbit(pids[p], ds[p])
+            # rabbit_dict[pids[p]] = Rabbit(pids[p], ds[p])
+            dists[pids[p]] = ds[p]
             scores[pids[p]] = 0
+            heapq.heappush(rabbits, (0, 0+0, 0, 0, pids[p]))
 
     elif inputline[0] == 200: # race
         K, S = inputline[1:]
         race(K, S, N, M)
     elif inputline[0] == 300: # change d
         pid_t, L = inputline[1:]
-        rabbit_dict[pid_t].d *= L
+        dists[pid_t] *= L
 
     elif inputline[0] == 400: # choose best rabbit
         max_score = max(scores.values())
         max_score += total_score
         print(max_score)
-        # max_score = 0
-        # for pid, rabbit in rabbit_dict.items():
-        #     print(rabbit.score)
-        #     max_score = max(-rabbit.score, max_score)
-        # print(max_score, total_score)
-        # print(max_score+total_score)
