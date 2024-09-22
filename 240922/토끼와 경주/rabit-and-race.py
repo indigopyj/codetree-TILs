@@ -64,6 +64,7 @@ def move_rabbit(pid, row, col, N, M):
     heapq.heappush(positions, (-(x+y), -x, -y))
 
     _, x, y = heapq.heappop(positions)
+    #print("positions : ", -x, -y)
     return (-x, -y)
 
 
@@ -75,19 +76,21 @@ def race(K, S, N, M):
     chosen_rabbit = []
     for k in range(K):
         n_jump, sum_rc, row, col, pid  = heapq.heappop(rabbits)
-        chosen_rabbit.append((sum_rc, row, col, pid))
-        #print("choose ", r_id)
+        #print("choose ", pid)
         new_row, new_col = move_rabbit(pid, row, col, N, M)
         score = new_row + 1 + new_col + 1
         n_jump += 1
+        chosen_rabbit.append((new_row, new_col, pid))
         
         scores[pid] -= score
         total_score += score
         heapq.heappush(rabbits, (n_jump, new_row+new_col, new_row, new_col, pid))
     
-    chosen_rabbit.sort(reverse=True)
+    chosen_rabbit.sort(key=lambda x: (x[0]+x[1], x[0], x[1], x[2]), reverse=True)
+    #print(chosen_rabbit)
 
     best_rabbit = chosen_rabbit[0][-1] 
+    #print("best rabbit ", best_rabbit, S)
     scores[best_rabbit] += S
     
     return
@@ -111,6 +114,7 @@ for _ in range(Q):
     elif inputline[0] == 300: # change d
         pid_t, L = inputline[1:]
         dists[pid_t] *= L
+        #print(f"{pid_t} rabbit dists {dists[pid_t]}")
 
     elif inputline[0] == 400: # choose best rabbit
         max_score = max(scores.values())
