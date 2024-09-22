@@ -80,16 +80,18 @@ def race(K, S, N, M):
         new_row, new_col = move_rabbit(pid, row, col, N, M)
         score = new_row + 1 + new_col + 1
         n_jump += 1
-        chosen_rabbit.append((new_row, new_col, pid))
+        #chosen_rabbit.append((new_row, new_col, pid))
+        heapq.heappush(chosen_rabbit, (-(new_row+new_col), -new_row, -new_col, -pid))
         
         scores[pid] -= score
         total_score += score
         heapq.heappush(rabbits, (n_jump, new_row+new_col, new_row, new_col, pid))
     
-    chosen_rabbit.sort(key=lambda x: (x[0]+x[1], x[0], x[1], x[2]), reverse=True)
+    #chosen_rabbit.sort(key=lambda x: (x[0]+x[1], x[0], x[1], x[2]), reverse=True)
     #print(chosen_rabbit)
+    best_rabbit = -heapq.heappop(chosen_rabbit)[-1]
 
-    best_rabbit = chosen_rabbit[0][-1] 
+    #best_rabbit = chosen_rabbit[0][-1] 
     #print("best rabbit ", best_rabbit, S)
     scores[best_rabbit] += S
     
