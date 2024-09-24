@@ -58,6 +58,7 @@ for k in range(1, K+1):
     defenser = towers[-1][-1]
     # print("attacker: ", attacker)
     # print("defenser: ", defenser)
+    damage = powers[attacker]
     powers[attacker] += N+M
     # powers[defenser] = max(powers[defenser] - powers[attacker], 0)
 
@@ -86,10 +87,10 @@ for k in range(1, K+1):
         if state[s] == 0:
             powers[s] += 1
         elif state[s] == 2:
-            powers[s] = max(powers[s] - powers[attacker] // 2, 0)
+            powers[s] = max(powers[s] - damage // 2, 0)
             
         elif state[s] == 3:
-            powers[s] = max(powers[s] - powers[attacker], 0)
+            powers[s] = max(powers[s] - damage, 0)
 
         if powers[s] <= 0:
             grid[i][j] = -1
