@@ -11,10 +11,9 @@ history = dict()
 positions = dict()
 
 def bfs(start_node, end_node):
-    global n
     ti, tj = positions[end_node]
     queue = deque()
-    visited = [False]*n
+    visited = [False] * ((N*M) + 1)
     queue.append((start_node, 0, []))
     visited[start_node] = True
     while queue:
