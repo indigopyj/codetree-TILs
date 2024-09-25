@@ -38,12 +38,13 @@ for i in range(N):
     for j in range(M):
         n+= 1
         history[n] = 0
-        powers[n] = inputline[j]
+        
         positions[n] = (i,j)
         if inputline[j] == 0:
             state[n] = -1
             row.append(-1)
             continue
+        powers[n] = inputline[j]
         row.append(n)
         state[n] =  0 
         towers.append((i, j, inputline[j], 0, n))
@@ -51,9 +52,9 @@ for i in range(N):
 
 for k in range(1, K+1):
     towers = sorted(towers, key=lambda item: (-item[2], item[3], item[0]+item[1], item[1]), reverse=True )
-    #print("powers: ", powers)
-    #print("positions: ", positions)
-    #print("towers : ", towers)
+    # print("powers: ", powers)
+    # print("positions: ", positions)
+    # print("towers : ", towers)
     attacker = towers[0][-1]
     defenser = towers[-1][-1]
     # print("attacker: ", attacker)
@@ -89,10 +90,9 @@ for k in range(1, K+1):
             powers[s] += 1
         elif state[s] == 2:
             powers[s] = max(powers[s] - damage // 2, 0)
-            
         elif state[s] == 3:
             powers[s] = max(powers[s] - damage, 0)
-
+        state[s] = 0 # first error
         if powers[s] <= 0:
             grid[i][j] = -1
             state[s] = -1
@@ -100,6 +100,6 @@ for k in range(1, K+1):
             del powers[s]
         else:
             towers.append((i, j, powers[s], history[s], s))
-            state[s] = 0
-    #print(powers)
+        
+    # print(powers)
 print(max(powers.values()))
