@@ -57,6 +57,8 @@ for k in range(1, K+1):
     # print("towers : ", towers)
     attacker = towers[0][-1]
     defenser = towers[-1][-1]
+    if attacker == defenser: # second error
+        break
     # print("attacker: ", attacker)
     # print("defenser: ", defenser)
     
