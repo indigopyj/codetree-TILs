@@ -93,10 +93,10 @@ for _ in range(q-1):
         # split stuff
         m_src, m_dst = inputline[1:]
         n = len(belts[m_src])
-        if n == 1:
+        slice_idx = math.floor(n / 2)
+        if slice_idx == 0:
             print(len(belts[m_dst]))
             continue
-        slice_idx = math.floor(n / 2)
         sliced_src = belts[m_src][:slice_idx]
         rest_src = belts[m_src][slice_idx:]
         src_last = sliced_src[-1]
