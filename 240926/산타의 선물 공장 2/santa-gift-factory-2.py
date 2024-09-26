@@ -95,7 +95,7 @@ for _ in range(q-1):
         n = len(belts[m_src])
         slice_idx = math.floor(n / 2)
         if slice_idx == 0:
-            print(len(belts[m_dst]))
+            # print(len(belts[m_dst]))
             continue
         sliced_src = belts[m_src][:slice_idx]
         rest_src = belts[m_src][slice_idx:]
