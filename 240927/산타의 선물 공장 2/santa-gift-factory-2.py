@@ -36,6 +36,13 @@ def move(m_src, m_dst):
     if n_boxes[m_src] == 0:
         print(n_boxes[m_dst])
         return
+    if n_boxes[m_dst] == 0:
+        n_boxes[m_dst] = n_boxes[m_src]
+        n_boxes[m_src] = 0
+        heads[m_dst] = heads[m_src]
+        tails[m_dst] = tails[m_src]
+        print(n_boxes[m_dst])
+        return
     
     origin_dst_head = heads[m_dst]
     origin_src_tail = tails[m_src]
