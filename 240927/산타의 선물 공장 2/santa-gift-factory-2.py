@@ -61,8 +61,8 @@ def remove_head(b_id):
     if n_boxes[b_id] == 0:
         return 0
     if n_boxes[b_id] == 1:
-        heads[b_id] = 0
         origin_head = heads[b_id]
+        heads[b_id] = 0
         nexts[origin_head] = prevs[origin_head] = 0
         n_boxes[b_id] = 0
         return origin_head
@@ -75,15 +75,15 @@ def remove_head(b_id):
     return origin_head
 
 def push_head(b_id, new_head):
-    if new_head == 0:
+    if new_head == 0: # head가 없다
         return
-    if n_boxes[b_id] == 0:
+    if n_boxes[b_id] == 0: # 벨트에 아무것도 없다
         heads[b_id] = new_head
         tails[b_id] = new_head
         n_boxes[b_id] += 1
         return
 
-    origin_head = heads[b_id]
+    origin_head = heads[b_id] # 기존 헤드
     prevs[origin_head] = new_head
     nexts[new_head] = origin_head
     heads[b_id] = new_head
