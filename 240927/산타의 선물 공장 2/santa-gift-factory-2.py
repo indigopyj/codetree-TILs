@@ -63,7 +63,7 @@ def remove_head(b_id):
     if n_boxes[b_id] == 1:
         origin_head = heads[b_id]
         heads[b_id] = 0
-        nexts[origin_head] = prevs[origin_head] = 0
+        tails[b_id] = 0
         n_boxes[b_id] = 0
         return origin_head
     origin_head = heads[b_id]
