@@ -90,11 +90,8 @@ def push_head(b_id, new_head):
     n_boxes[b_id] += 1
  
 def change_head(m_src, m_dst):
-    src_head = heads[m_src] # 0
-    dst_head = heads[m_dst] # 2
-    # print(src_head, dst_head)
-    remove_head(m_src)
-    remove_head(m_dst)
+    src_head = remove_head(m_src)
+    dst_head = remove_head(m_dst)
     # print(heads[m_src], heads[m_dst])
 
     push_head(m_src, dst_head)
@@ -112,7 +109,7 @@ def divide(m_src, m_dst):
     for i in range(N):
         elem = remove_head(m_src)
         boxes.append(elem)
-    for box in boxes:
+    for box in boxes[::-1]:
         push_head(m_dst, box)
     print(n_boxes[m_dst])
 
