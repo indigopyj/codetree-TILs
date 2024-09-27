@@ -41,7 +41,7 @@ def update_info(src, new_before=-1, new_behind=-1):
 
 for _ in range(q-1):
     inputline = list(map(int, input().split()))
-    #print("cmd: ", inputline)
+    # print("cmd: ", inputline)
     if inputline[0] == 200:
         # move stuff
         m_src, m_dst = inputline[1:]
@@ -57,7 +57,7 @@ for _ in range(q-1):
             # fronts[m_src] = -1
             # backs[m_src] = -1
             # fronts[m_trg] = belts[0]
-            print(len(belts[m_dst]))
+        print(len(belts[m_dst]))
             
 
     elif inputline[0] == 300:
@@ -80,8 +80,13 @@ for _ in range(q-1):
             belts[m_src].insert(0, trg_first)
         if len(belts[m_dst]) != 0:
             update_info(belts[m_dst][0], -1, belts[m_dst][1] if len(belts[m_dst]) >= 2 else -1)
+            if len(belts[m_dst]) > 1:
+                update_info(belts[m_dst][1], belts[m_dst][0], belts[m_dst][2] if len(belts[m_dst]) >= 3 else -1)
+
         if len(belts[m_src]) != 0:
             update_info(belts[m_src][0], -1, belts[m_src][1] if len(belts[m_src]) >= 2 else -1)
+            if len(belts[m_src]) > 1:
+                update_info(belts[m_src][1], belts[m_src][0], belts[m_src][2] if len(belts[m_src]) >= 3 else -1)
         # print("after change")
         # print(belts[m_src])
         # print(belts[m_dst])
