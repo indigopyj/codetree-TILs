@@ -45,8 +45,6 @@ def move_shortest(p_x, p_y, t_x, t_y):
 
 def move(people):
     end_stores = []
-    new_people = []
-    # print(people)
     for p_id, (p_x, p_y) in people.items():
         if (p_x, p_y) == (-1, -1):
             continue
@@ -54,12 +52,9 @@ def move(people):
         tx, ty = stores[p_id]
         nx, ny, _ = move_shortest(p_x, p_y, tx, ty)
         # print(f"move {p_id} people {p_x}, {p_y} to {nx}, {ny} for {tx}, {ty}")
-        new_people.append((p_id, nx, ny))
+        people[p_id] = (nx, ny)
         if (nx, ny) == (tx, ty):
             end_stores.append((p_id, nx, ny))
-    for item in new_people:
-        p_id, nx, ny = item
-        people[p_id] = (nx, ny)
     return end_stores 
 
 def move_to_base(store):
