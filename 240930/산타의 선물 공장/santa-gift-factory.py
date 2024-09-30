@@ -56,6 +56,7 @@ for _ in range(q):
         f_id = inputline[1]
         if f_id not in boxes:
             print(-1)
+            continue
         belt_id = boxes[f_id]
         print(belt_id)
         if belt_id != -1 and belts[belt_id] is not None:
