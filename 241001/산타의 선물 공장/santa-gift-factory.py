@@ -30,8 +30,9 @@ for _ in range(q):
             belts[b_id].append(i+1)
             weights[i+1] = w
             boxes[i+1] = b_id
+        # print(belts)
         for b_id, belt in belts.items():
-            for i in range(2, len(belt)):
+            for i in range(1, len(belt)):
                 prevs[belt[i]] = belt[i-1]
                 nexts[belt[i-1]] = belt[i]
             heads[b_id] = belt[0]
@@ -40,6 +41,7 @@ for _ in range(q):
         # print(nexts[:n])
         # print(heads)
         # print(tails)
+        # print(arrid_to_boxid)
         # print(belts)
         # print(boxes)
         # print(weights)
@@ -49,9 +51,14 @@ for _ in range(q):
         total_sum = 0
         for i in range(1, m+1):
             item = heads[i]
+            
+            if item == -1:
+                continue
             if weights[item] <= w_max:
+                # print("pop ", weights[item])
                 total_sum += weights[item]
                 heads[i] = nexts[item]
+                # print(heads[i], item, nexts[:n+1])
                 prevs[item] = -1
                 nexts[item] = -1
                 del boxes[item]
@@ -60,6 +67,7 @@ for _ in range(q):
                 prevs[item] = tails[i]
                 nexts[item] = -1
                 tails[i] = item
+        # print(heads, tails)
         # for b_id, belt in belts.items():
         #     # print(b_id, belt)
         #     if belt is None or len(belt) == 0:
@@ -99,6 +107,7 @@ for _ in range(q):
         nexts[i] = -1
         del boxes[i]
         print(r_id)
+        # print(heads, tails)
 
     elif cmd == 400: # check box
         f_id = inputline[1]
@@ -117,7 +126,7 @@ for _ in range(q):
         heads[belt_id] = i
         tails[belt_id] = prev_item
         prevs[i] = -1 # 맨 앞
-        
+        # print(heads, tails)
 
     else: # break belt
         b_num = inputline[1]
@@ -128,10 +137,11 @@ for _ in range(q):
         belt_list = list(range(b_num+1, m+1)) + list(range(1,m+1))
         new_b_id = b_num
         for b in belt_list:
-            if b_num!= b and belts[b] is not None:
+            if b_num!= b and heads[b] != -1:
                 new_b_id = b
                 break
-        
+        # print("before")
+        # print(heads, tails)
         head = heads[b_num]
         tail = tails[b_num]
         new_head = heads[new_b_id]
@@ -141,6 +151,8 @@ for _ in range(q):
         tails[new_b_id] = tail
         heads[b_num] = -1
         tails[b_num] = -1
+        # print("after")
+        # print(heads, tails)
         for b in belts[b_num]:
             boxes[b] = new_b_id
         
