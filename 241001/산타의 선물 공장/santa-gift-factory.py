@@ -154,7 +154,8 @@ for _ in range(q):
         # print("after")
         # print(heads, tails)
         for b in belts[b_num]:
-            boxes[b] = new_b_id
+            if b in boxes:
+                boxes[b] = new_b_id
         
         print(b_num)
         # print(belts[new_b_id])
