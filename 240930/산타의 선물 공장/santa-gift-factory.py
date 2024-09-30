@@ -39,7 +39,7 @@ for _ in range(q):
         print(total_sum)
     elif cmd == 300: # remove box
         r_id = inputline[1]
-        if r_id not in boxes:
+        if r_id not in boxes or boxes[r_id] == -1:
             print(-1)
             continue
         belt_id = boxes[r_id]
