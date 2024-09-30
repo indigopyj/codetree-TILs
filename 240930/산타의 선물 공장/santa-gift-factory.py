@@ -4,6 +4,7 @@ q = int(input())
 belts = dict()
 boxes = dict()
 weights = dict()
+heads = dict()
 for _ in range(q):
     inputline = list(map(int, input().split()))
     cmd = inputline[0]
@@ -81,18 +82,20 @@ for _ in range(q):
         if b_num not in belts or belts[b_num] is None:
             print(-1)
             continue
-        tmp = copy.deepcopy(belts[b_num])
-        belts[b_num] = None
+        # tmp = copy.deepcopy(belts[b_num])
+        
         belt_list = list(range(b_num+1, m+1)) + list(range(1,m+1))
         new_b_id = b_num
         for b in belt_list:
-            if belts[b] is not None:
+            if b_num!= b and belts[b] is not None:
                 new_b_id = b
                 break
         # print(belts[new_b_id])
-        belts[new_b_id] = belts[new_b_id] + tmp
-        for b in tmp:
+        
+        belts[new_b_id] = belts[new_b_id] + belts[b_num]
+        for b in belts[b_num]:
             boxes[b] = new_b_id
+        belts[b_num] = None
         print(b_num)
         # print(belts[new_b_id])
         # print(boxes)
