@@ -138,13 +138,13 @@ for _ in range(q):
         b_list = list(range(b_num+1, m)) + list(range(m))
         for b_id in b_list:
             if broken[b_id] == 0:
-                if tails[b_id] == 0: #and heads[b_id] == 0:
+                if heads[b_id] == 0 and tails[b_id] == 0:
                     heads[b_id] = heads[b_num]
                     tails[b_id] = tails[b_num]
                 
                 else:
                     push_item(tails[b_id], heads[b_num])
-                    tails[b_num] = tails[b_id]
+                    tails[b_id] = tails[b_num]
             
                 item = heads[b_num]
                 # print(id)
