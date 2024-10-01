@@ -52,7 +52,7 @@ for _ in range(q):
         for i in range(1, m+1):
             item = heads[i]
             
-            if item == -1 or item not in boxes:
+            if item == -1:
                 continue
             if weights[item] <= w_max:
                 # print("pop ", weights[item])
@@ -88,6 +88,9 @@ for _ in range(q):
             print(-1)
             continue
         i = boxid_to_arrid[r_id]
+        if i not in boxes:
+            print(-1)
+            continue
         prev_item = prevs[i]
         next_item = nexts[i]
             
