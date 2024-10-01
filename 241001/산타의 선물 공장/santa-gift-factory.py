@@ -83,7 +83,7 @@ for _ in range(q):
                     heads[i] = 0
                     remove_item(item)
                     belt_num[item] = -1
-                else:
+                elif nexts[id] != 0: # 원소가 하나만 있으면 그냥 유지
                     remove_item(item)
                     push_item(tails[i], item)            
         print(total_sum)
