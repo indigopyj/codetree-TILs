@@ -52,7 +52,7 @@ for _ in range(q):
         for i in range(1, m+1):
             item = heads[i]
             
-            if item == -1:
+            if item == -1 or item not in boxes:
                 continue
             if weights[item] <= w_max:
                 # print("pop ", weights[item])
