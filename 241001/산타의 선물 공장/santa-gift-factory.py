@@ -35,8 +35,9 @@ for _ in range(q):
             for i in range(1, len(belt)):
                 prevs[belt[i]] = belt[i-1]
                 nexts[belt[i-1]] = belt[i]
-            heads[b_id] = belt[0]
-            tails[b_id] = belt[-1]
+            if len(belt) > 0:
+                heads[b_id] = belt[0]
+                tails[b_id] = belt[-1]
         # print(prevs[:n+1])
         # print(nexts[:n])
         # print(heads)
@@ -51,9 +52,10 @@ for _ in range(q):
         total_sum = 0
         for i in range(1, m+1):
             item = heads[i]
-            
+            # print(item, boxes)
             if item == -1 or item not in boxes:
                 continue
+            
             if weights[item] <= w_max:
                 # print("pop ", weights[item])
                 total_sum += weights[item]
@@ -93,22 +95,38 @@ for _ in range(q):
             continue
         prev_item = prevs[i]
         next_item = nexts[i]
-            
-        if prev_item == -1 and next_item == -1: # 존재하지 않음
-            print(-1)
-            continue
-        elif prev_item != -1: # 앞에 노드 존재
+        belt_id = boxes[i]
+        # if prev_item == -1 and next_item == -1: 
+
+        if prev_item != -1: # 앞에 노드 존재
             nexts[prev_item] = next_item
             if next_item == -1: # 맨 뒤
-                tails[boxes[i]] = prev_item
+                tails[belt_id] = prev_item
         elif next_item != -1: # 뒤에 노드 존재
             prevs[next_item] = prev_item
             if prev_item == -1: # 맨 앞
-                heads[boxes[i]] = next_item
+                heads[belt_id] = next_item
+        else:
+            heads[belt_id] = -1
+            tails[belt_id] = -1
+        
+        # print("here")
+        # print(heads[belt_id], len(heads))
+
+        # heads[boxes[i]] = -1
+        # tails[boxes[i]] = -1
+
+        # print("remove ", i)
+        # print(heads[boxes[i]], tails[boxes[i]], prev_item, next_item)
         
         prevs[i] = -1
         nexts[i] = -1
+        belts[belt_id].remove(i)
         del boxes[i]
+        # print(heads, tails)
+        # heads[belt_id] = -1
+        # tails[belt_id] = -1
+        
         print(r_id)
         # print(heads, tails)
 
@@ -159,6 +177,9 @@ for _ in range(q):
         for b in belts[b_num]:
             if b in boxes:
                 boxes[b] = new_b_id
+                belts[new_b_id].append(b)
+        belts[b_num] = []
+        # print(boxes, belts)
         
         print(b_num)
         # print(belts[new_b_id])
