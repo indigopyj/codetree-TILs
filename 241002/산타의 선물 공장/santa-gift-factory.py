@@ -99,23 +99,24 @@ for _ in range(q):
     elif cmd == 400: # check box
         # print(inputline)
         f_id = inputline[1]
-        ans = -1
-        if belt_num[f_id] != -1:
-            b_id = belt_num[f_id]
-            ans = b_id + 1
-            if heads[b_id] != f_id:
-                
-                origin_tail = tails[b_id]
-                origin_head = heads[b_id]
-                new_tail = prevs[f_id]
-                tails[b_id] = new_tail
-                nexts[new_tail] = 0
-                
-                nexts[origin_tail] = origin_head
-                prevs[origin_head] = origin_tail
-                prevs[f_id] = 0
-                heads[b_id] = f_id
-        # print(prevs, nexts)
+        if belt_num[f_id] == -1:
+            print(-1)
+            continue
+        
+        b_id = belt_num[f_id]
+        ans = b_id + 1
+        if heads[b_id] != f_id:
+            origin_tail = tails[b_id]
+            origin_head = heads[b_id]
+            new_tail = prevs[f_id]
+            tails[b_id] = new_tail
+            nexts[new_tail] = 0
+            
+            nexts[origin_tail] = origin_head
+            prevs[origin_head] = origin_tail
+            prevs[f_id] = 0
+            heads[b_id] = f_id
+    # print(prevs, nexts)
         print(ans)
             
 
@@ -130,6 +131,7 @@ for _ in range(q):
         broken[b_num] = 1
 
         if heads[b_num] == 0 and tails[b_num] == 0: # nothing
+            print(b_num+1)
             continue
 
         
