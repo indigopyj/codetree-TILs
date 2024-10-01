@@ -118,7 +118,7 @@ for _ in range(q):
             print(-1)
             continue
         i = boxid_to_arrid[f_id]
-        if prevs[i] == -1 and nexts[i] == -1 and i not in boxes:
+        if (prevs[i] == -1 and nexts[i] == -1) or i not in boxes:
             print(-1)
             continue
         belt_id = boxes[i]
