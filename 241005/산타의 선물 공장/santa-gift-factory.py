@@ -85,7 +85,7 @@ for _ in range(q):
                 # print("here")
                 # print(heads, tails)
                 total_sum += weights[item]
-            elif tails[i] != 0:
+            elif heads[i] != tails[i]:
                 head = pop_head(i)
                 which_belt[head] = i
                 old_tail = tails[i]
@@ -163,8 +163,12 @@ for _ in range(q):
         if broken[b_num] :
             print(-1)
             continue
-        candidates= list(range(b_num+1, m+1)) + list(range(1, m+1))
         broken[b_num] = True
+        if heads[b_num] == 0 and tails[b_num] == 0:
+            print(b_num)
+            continue
+        candidates= list(range(b_num+1, m+1)) + list(range(1, m+1))
+        
         
         for belt_i in candidates:
             if broken[belt_i] == False:
