@@ -75,6 +75,7 @@ for _ in range(q):
         popped_list = []
         total_sum = 0
         # print(i_to_iid)
+        # print(heads, tails)
         for i in range(1,m+1):
             if heads[i] == 0 or broken[i]:
                 continue
@@ -185,6 +186,9 @@ for _ in range(q):
         backs[origin_tail] = broken_head
         fronts[broken_head] = origin_tail
         tails[belt_i] = broken_tail
+        if heads[belt_i] == 0: # 이거추가
+            heads[belt_i] = broken_head
         heads[b_num] = tails[b_num] = 0
+        # print(heads, tails)
         
         print(b_num)
