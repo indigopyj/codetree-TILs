@@ -69,7 +69,7 @@ for _ in range(q):
         if n_boxes[m_dst] == 0:
             heads[m_dst] = heads[m_src]
             tails[m_dst] = tails[m_src]
-            n_boxes[m_dst] = n_boxes[m_src]
+            n_boxes[m_dst] += n_boxes[m_src]
             n_boxes[m_src] = 0
             print(n_boxes[m_dst])
             continue
