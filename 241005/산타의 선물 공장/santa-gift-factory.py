@@ -13,21 +13,21 @@ heads, tails, fronts, backs, which_belt, broken = None, None, None, None, None, 
 #     which_belt[pop_head] = -1
 #     return pop_head
 
-# def push_head(b_id, item):
-#     old_head = heads[b_id]
-#     which_belt[item] = b_id
-#     if old_head == 0:
-#         heads[b_id] = item
-#         tails[b_id] = item
-#         fronts[item] = 0 
-#         backs[item] = 0
-#         return
-#     fronts[old_head] = item
-#     backs[item] = old_head
-#     heads[b_id] = item
-#     fronts[item] = 0
+def push_head(b_id, item):
+    old_head = heads[b_id]
+    which_belt[item] = b_id
+    if old_head == 0:
+        heads[b_id] = item
+        tails[b_id] = item
+        fronts[item] = 0 
+        backs[item] = 0
+        return
+    fronts[old_head] = item
+    backs[item] = old_head
+    heads[b_id] = item
+    fronts[item] = 0
     
-#     return
+    return
 
 
 def push_item(b_id, item):
