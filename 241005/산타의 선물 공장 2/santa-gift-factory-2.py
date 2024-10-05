@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 fronts, backs, heads, tails = None, None, None, None
-which_belts = None
+# which_belts = None
 n_boxes = None
 
 def pop_head(b_id):
@@ -10,7 +10,7 @@ def pop_head(b_id):
     fronts[backs[pop_head]] = 0
     backs[pop_head] = 0
     n_boxes[b_id] -= 1
-    which_belts[pop_head] = 0
+    # which_belts[pop_head] = 0
     if n_boxes[b_id] == 0:
         tails[b_id] = 0
     return pop_head
@@ -22,7 +22,7 @@ def push_head(b_id, new_item):
         backs[new_item] = old_head
     heads[b_id] = new_item
     n_boxes[b_id] += 1
-    which_belts[new_item] = b_id
+    # which_belts[new_item] = b_id
     if n_boxes[b_id] == 1:
         tails[b_id] = new_item
 
@@ -37,7 +37,7 @@ for _ in range(q):
         belts = dict()
         for i in range(n):
             belts[i+1] = []
-        which_belts = [0] * (m+1)
+        # which_belts = [0] * (m+1)
         fronts = [0] * (m+1)
         backs = [0] * (m+1)
         heads = [0] * (n+1)
@@ -47,7 +47,7 @@ for _ in range(q):
         for i in range(m):
             b_id = boxes[i]
             belts[b_id].append(i+1)
-            which_belts[i+1] = b_id
+            # which_belts[i+1] = b_id
         
         for b_id, belt in belts.items():
             if len(belt) != 0:
@@ -66,6 +66,14 @@ for _ in range(q):
         if n_boxes[m_src] == 0:
             print(n_boxes[m_dst])
             continue
+        if n_boxes[m_dst] == 0:
+            heads[m_dst] = heads[m_src]
+            tails[m_dst] = tails[m_src]
+            n_boxes[m_dst] = n_boxes[m_src]
+            n_boxes[m_src] = 0
+            print(n_boxes[m_dst])
+            continue
+
         
         tmp = []
         n_src = n_boxes[m_src]
