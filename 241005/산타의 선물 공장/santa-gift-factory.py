@@ -2,32 +2,61 @@ q = int(input())
 heads, tails, fronts, backs, which_belt, broken = None, None, None, None, None, None
 
 
-def pop_head(b_id):
-    global heads, tails, fronts, backs, which_belt, broken
-    pop_head = heads[b_id]
-    heads[b_id] = backs[pop_head]
-    fronts[backs[pop_head]] = 0
-    if backs[pop_head] == 0:
-        tails[b_id] = 0
-    backs[pop_head] = 0
-    which_belt[pop_head] = -1
-    return pop_head
+# def pop_head(b_id):
+#     global heads, tails, fronts, backs, which_belt, broken
+#     pop_head = heads[b_id]
+#     heads[b_id] = backs[pop_head]
+#     fronts[backs[pop_head]] = 0
+#     if backs[pop_head] == 0:
+#         tails[b_id] = 0
+#     backs[pop_head] = 0
+#     which_belt[pop_head] = -1
+#     return pop_head
 
-def push_head(b_id, item):
-    old_head = heads[b_id]
-    which_belt[item] = b_id
-    if old_head == 0:
-        heads[b_id] = item
-        tails[b_id] = item
-        fronts[item] = 0 
-        backs[item] = 0
-        return
-    fronts[old_head] = item
-    backs[item] = old_head
-    heads[b_id] = item
-    fronts[item] = 0
+# def push_head(b_id, item):
+#     old_head = heads[b_id]
+#     which_belt[item] = b_id
+#     if old_head == 0:
+#         heads[b_id] = item
+#         tails[b_id] = item
+#         fronts[item] = 0 
+#         backs[item] = 0
+#         return
+#     fronts[old_head] = item
+#     backs[item] = old_head
+#     heads[b_id] = item
+#     fronts[item] = 0
     
-    return
+#     return
+
+
+def push_item(b_id, item):
+    old_tail = tails[b_id]
+    backs[old_tail] = item
+    fronts[item] = old_tail
+    tails[b_id] = item
+    which_belt[item] = b_id
+
+
+def remove_item(box_i):
+    belt_i = which_belt[box_i]
+    front = fronts[box_i]
+    back = backs[box_i]
+    if heads[belt_i] == tails[belt_i]:
+        heads[belt_i] = tails[belt_i] = 0
+    elif heads[belt_i] == box_i:
+        heads[belt_i] = back
+        backs[box_i] = 0
+    elif tails[belt_i] == box_i:
+        tails[belt_i] = front
+        fronts[box_i] = 0
+    else:
+        fronts[back] = front
+        backs[front] = back
+
+    which_belt[box_i] = -1
+    fronts[box_i] = backs[box_i] = 0
+    return box_i
 
 for _ in range(q):
     line = list(map(int, input().split()))
@@ -81,17 +110,14 @@ for _ in range(q):
                 continue
             head_weight = weights[heads[i]]
             if head_weight <= w_max:
-                item = pop_head(i)
+                total_sum += weights[heads[i]]
+                remove_item(heads[i])
                 # print("here")
                 # print(heads, tails)
-                total_sum += weights[item]
+                
             elif heads[i] != tails[i]:
-                head = pop_head(i)
-                which_belt[head] = i
-                old_tail = tails[i]
-                fronts[head] = old_tail
-                backs[old_tail] = head
-                tails[i] = head
+                item = remove_item(heads[i])
+                push_item(i, item)
                 # print("there")
                 # print(heads, tails)
         print(total_sum)
@@ -108,21 +134,7 @@ for _ in range(q):
             print(-1)
             continue
         print(r_id)
-        which_belt[box_i] = -1
-        front = fronts[box_i]
-        back = backs[box_i]
-        if heads[belt_i] == box_i:
-            heads[belt_i] = back
-        if tails[belt_i] == box_i:
-            tails[belt_i] = front
-        if front != 0:
-            backs[front] = back
-        if back != 0:
-            fronts[back] = front
-        fronts[box_i] = backs[box_i] = 0
-        # print(i_to_iid)
-        # print(heads, tails)
-        # print(fronts, backs)
+        remove_item(box_i)
 
     elif cmd == 400:
         f_id = line[1]
