@@ -89,9 +89,9 @@ for _ in range(q):
                 head = pop_head(i)
                 which_belt[head] = i
                 old_tail = tails[i]
-                tails[i] = head
                 fronts[head] = old_tail
                 backs[old_tail] = head
+                tails[i] = head
                 # print("there")
                 # print(heads, tails)
         print(total_sum)
@@ -170,25 +170,32 @@ for _ in range(q):
             if broken[belt_i] == False:
                 break
         
+        if heads[belt_i] == 0:
+            heads[belt_i] = heads[b_num]
+            tails[belt_i] = tails[b_num]
+            item = backs[heads[b_num]]
+            which_belt[heads[b_num]] = belt_i
+            
+            while item != 0:
+                which_belt[item] = belt_i
+                item = backs[item]
+            heads[b_num] = tails[b_num] = 0
 
-        broken_head = heads[b_num]
-        broken_tail = tails[b_num]
-        origin_tail = tails[belt_i]
+        else:
+            broken_head = heads[b_num]
+            broken_tail = tails[b_num]
+            origin_tail = tails[belt_i]
 
-        item = backs[broken_head]
-        which_belt[broken_head] = belt_i
-        count = 0
-        while item != 0:
-            which_belt[item] = belt_i
-            item = backs[item]
-
-        
-        backs[origin_tail] = broken_head
-        fronts[broken_head] = origin_tail
-        tails[belt_i] = broken_tail
-        if heads[belt_i] == 0: # 이거추가
-            heads[belt_i] = broken_head
-        heads[b_num] = tails[b_num] = 0
+            item = backs[broken_head]
+            which_belt[broken_head] = belt_i
+            
+            while item != 0:
+                which_belt[item] = belt_i
+                item = backs[item]        
+            backs[origin_tail] = broken_head
+            fronts[broken_head] = origin_tail
+            tails[belt_i] = broken_tail
+            heads[b_num] = tails[b_num] = 0
         # print(heads, tails)
         
         print(b_num)
