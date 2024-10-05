@@ -74,16 +74,25 @@ for _ in range(q):
             n_boxes[m_src] = 0
             print(n_boxes[m_dst])
             continue
+        
+        origin_head = heads[m_dst]
+        src_tail = tails[m_src]
+        heads[m_dst] = heads[m_src]
+        fronts[origin_head] = src_tail
+        backs[src_tail] = origin_head
+        n_boxes[m_dst] += n_boxes[m_src]
+        n_boxes[m_src] = 0
+        heads[m_src] = tails[m_src] = 0
 
         
-        tmp = []
-        n_src = n_boxes[m_src]
-        for _ in range(n_src):
-            item = pop_head(m_src)
-            tmp.append(item)
+        # tmp = []
+        # n_src = n_boxes[m_src]
+        # for _ in range(n_src):
+        #     item = pop_head(m_src)
+        #     tmp.append(item)
 
-        for item in tmp[::-1]:
-            push_head(m_dst, item)
+        # for item in tmp[::-1]:
+        #     push_head(m_dst, item)
         # print(n_boxes[m_src], n_boxes[m_dst])
         # print(fronts, backs)
         # print(heads, tails)
