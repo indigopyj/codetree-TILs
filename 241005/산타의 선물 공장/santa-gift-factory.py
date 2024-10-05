@@ -85,7 +85,7 @@ for _ in range(q):
                 # print("here")
                 # print(heads, tails)
                 total_sum += weights[item]
-            else:
+            elif tails[i] != 0:
                 head = pop_head(i)
                 which_belt[head] = i
                 old_tail = tails[i]
