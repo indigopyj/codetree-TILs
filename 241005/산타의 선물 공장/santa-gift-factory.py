@@ -125,6 +125,9 @@ for _ in range(q):
 
     elif cmd == 400:
         f_id = line[1]
+        if f_id not in iid_to_i:
+            print(-1)
+            continue
         box_i = iid_to_i[f_id]
         belt_i = which_belt[box_i]
         if belt_i == -1:
