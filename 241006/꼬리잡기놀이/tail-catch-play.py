@@ -100,6 +100,7 @@ def throw_ball(rnd):
     for i in range(n):
         nx, ny = bx + dx*i, by + dy*i
         if 0 < grid[nx][ny] < 4:
+            # print(f"Hit {nx} {ny}")
             team_i = team_grid[nx][ny]
             k = team_pos[team_i].index((nx,ny)) + 1
             team_points[team_i] += k**2
@@ -108,12 +109,26 @@ def throw_ball(rnd):
 
 def change_head_tail(team_i):
     head = team_pos[team_i][0]
-    tail = team_pos[team_i][tails[team_i]]
-    team_pos[team_i][0] = tail
-    team_pos[team_i][tails[team_i]] = head
+    tail = tails[team_i]
+    q = deque()
+    
+    for i in range(tail+1):
+        node = team_pos[team_i][i]
+        q.appendleft(node)
+    
+    for i in range(len(team_pos[team_i])-1, tail, -1):
+        node = team_pos[team_i][i]
+        q.append(node)
+    team_pos[team_i] = list(q)
+
+
 
 for rnd in range(k):
     go()
     throw_ball(rnd)
+    
+    # for r in grid:
+    #     print(r)
+    # print()
 
 print(sum(team_points))
