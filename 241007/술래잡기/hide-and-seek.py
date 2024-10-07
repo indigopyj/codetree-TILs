@@ -4,14 +4,14 @@ n,m,h,k = map(int, input().split())
 r_dirs = [(0,1), (1,0)]
 runner_pos = dict()
 runner_dir = dict()
-runner_grid = [[0] * n for _ in range(n)]
+runner_grid = [[[] for _ in range(n)] for _ in range(n)]
 tree_pos = []
 is_tree = [[False] * n for _ in range(n)]
 for i in range(1,m+1):
     x,y,d = map(int, input().split())
     runner_pos[i] = (x-1,y-1)
     runner_dir[i] = r_dirs[d-1]
-    runner_grid[x-1][y-1] = i
+    runner_grid[x-1][y-1].append(i)
 
 for _ in range(h):
     x,y = map(int, input().split())
@@ -61,9 +61,10 @@ rev_tagger_path = list(rev_tagger_path)
 
 
 def move_runner(tx, ty):
+    
     for r_i in runner_pos:
         rx, ry = runner_pos[r_i]
-        runner_grid[rx][ry] = 0
+        runner_grid[rx][ry].remove(r_i)
         rd = runner_dir[r_i]
         dist = abs(tx - rx) + abs(ty - ry)
         if dist > 3:
@@ -75,12 +76,17 @@ def move_runner(tx, ty):
             runner_dir[r_i] = new_rd
         if (tx,ty) == (nx,ny):
             continue
+
+        
         runner_pos[r_i] = (nx,ny)
+        # print(f"{r_i} move to {nx}, {ny}")
 
     for i, (rx, ry) in runner_pos.items():
-        runner_grid[rx][ry] = i
+        runner_grid[rx][ry].append(i)
+    # print(runner_pos)
 
 def seek_runner(tx,ty,td, turn):
+    # print("turn: ", turn, tx, ty)
     count = 0
     if td == 0 or td == 2:
         delta_x = t_dirs[td][0]
@@ -90,14 +96,17 @@ def seek_runner(tx,ty,td, turn):
         delta_y = t_dirs[td][1]
     for i in range(3):
         sx, sy = tx + delta_x * i, ty + delta_y * i
-        if 0 <= sx < n and 0 <= sy < n:
-            if runner_grid[sx][sy] > 0 and not is_tree[sx][sy]:
-                # print(sx, sy, is_tree[sx][sy])
+        if 0 <= sx < n and 0 <= sy < n and not is_tree[sx][sy] and len(runner_grid[sx][sy]) > 0:
+            # print(runner_grid[sx][sy])
+            for r_id in runner_grid[sx][sy]:
                 count += 1
-                r_id = runner_grid[sx][sy]
-                del runner_pos[r_id], runner_dir[r_id]
-                runner_grid[sx][sy] = 0
-    # print(turn, count)
+                if r_id in runner_pos:
+                    del runner_pos[r_id]
+                if r_id in runner_dir:
+                    del runner_dir[r_id]
+            runner_grid[sx][sy] = []
+
+    # print(count)
     return count * turn
 
 
