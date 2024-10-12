@@ -72,10 +72,20 @@ def change_power(c, power):
     up_dfs(parents[c], powers[c]-1, 1)
 
 def change_parents(c1, c2):
+    # print(DP)
     p1 = parents[c1]
     p2 = parents[c2]
-    up_dfs(p1, powers[c1]-1, -1)
-    up_dfs(p2, powers[c2]-1, -1)
+    c1_state = state[c1]
+    c2_state = state[c2]
+    if state[c1]:
+        # print("C1 true to false")
+        change_state(c1)
+    if state[c2]:
+        # print("C2 true to false")
+        change_state(c2)
+    # up_dfs(p1, powers[c1]-1, -1)
+    # up_dfs(p2, powers[c2]-1, -1)
+    # print(DP)
 
     child_1 = children[p1]
     child_2 = children[p2]
@@ -85,8 +95,14 @@ def change_parents(c1, c2):
     child_2.append(c1)
     parents[c1] = p2
     parents[c2] = p1
-    up_dfs(parents[c1], powers[c1]-1, 1)
-    up_dfs(parents[c2], powers[c2]-1, 1)
+    if c1_state:
+        change_state(c1)
+    if c2_state:
+        change_state(c2)
+        
+    # up_dfs(parents[c1], powers[c1]-1, 1)
+    # up_dfs(parents[c2], powers[c2]-1, 1)
+    # print(DP)
     
 
 N, Q = map(int, input().split())
@@ -95,6 +111,7 @@ state = [True] * (N+1)
 DP = [0] * (N+1)
 for _ in range(Q):
     line = list(map(int, input().split()))
+    # print(line)
     cmd = line[0]
     if cmd == 100:
         parents = [-1] + line[1:1+N]
