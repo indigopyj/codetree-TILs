@@ -35,7 +35,8 @@ def get_all_children(node):
         # if powers[node] >= depth:
         #     count += 1
         for child in children[node]:
-            q.append((child, depth+1))
+            if state[child]:
+                q.append((child, depth+1))
     return node_child
 
 def up_dfs_2(node, power, value, child_list):
@@ -72,7 +73,7 @@ def change_power(c, power):
     up_dfs(parents[c], powers[c]-1, 1)
 
 def change_parents(c1, c2):
-    # print(DP)
+    # print("before off: ", DP)
     p1 = parents[c1]
     p2 = parents[c2]
     c1_state = state[c1]
@@ -85,7 +86,7 @@ def change_parents(c1, c2):
         change_state(c2)
     # up_dfs(p1, powers[c1]-1, -1)
     # up_dfs(p2, powers[c2]-1, -1)
-    # print(DP)
+    # print("after off: ", DP)
 
     child_1 = children[p1]
     child_2 = children[p2]
@@ -99,7 +100,7 @@ def change_parents(c1, c2):
         change_state(c1)
     if c2_state:
         change_state(c2)
-        
+    # print("final: ", DP)
     # up_dfs(parents[c1], powers[c1]-1, 1)
     # up_dfs(parents[c2], powers[c2]-1, 1)
     # print(DP)
