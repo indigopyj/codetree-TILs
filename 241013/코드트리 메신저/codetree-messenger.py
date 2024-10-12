@@ -1,6 +1,6 @@
-# import sys
-# sys.stdin = open("/Users/yjp/Downloads/input (6).txt", "r")
-# sys.stdout = open('/Users/yjp/Documents/output.txt', 'w')
+import sys
+sys.stdin = open("/Users/yjp/Downloads/input (7).txt", "r")
+sys.stdout = open('/Users/yjp/Documents/output.txt', 'w')
 
 
 N, Q = map(int, input().split())
@@ -8,7 +8,6 @@ parents = [0] * (N+1)
 powers = [0] * (N+1)
 children = [[] for _ in range(N+1)]
 state = [True] * (N+1)
-DP = [0] * (N+1)
 # 어떤 노드에 대해, 현재 남은 power가 n인 노드의 개수를 기록한 리스트
 # left_powers[idx][3]: idx 노드에 대해 남은 파워가 3인 노드 개수
 left_powers = [[0] * 21 for _ in range(N+1)]
@@ -16,6 +15,7 @@ left_powers = [[0] * 21 for _ in range(N+1)]
 
 def update(idx):
     left_powers[idx] = [0] * 21 # 초기화?
+    print("idx: ", idx)
     left_powers[idx][powers[idx]] += 1
     for child in children[idx]:
         if not state[child]:
@@ -30,7 +30,7 @@ def change_state(c):
     update(c)
 
 def change_power(c, power):
-    powers[c] = power
+    powers[c] = min(power, 20)
     update(c)
 
 def change_parents(c1, c2):
