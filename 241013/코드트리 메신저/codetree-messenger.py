@@ -1,8 +1,3 @@
-import sys
-sys.stdin = open("/Users/yjp/Downloads/input (7).txt", "r")
-sys.stdout = open('/Users/yjp/Documents/output.txt', 'w')
-
-
 N, Q = map(int, input().split())
 parents = [0] * (N+1)
 powers = [0] * (N+1)
@@ -85,7 +80,3 @@ for q in range(Q):
         c = line[1]
         res = sum(left_powers[c]) - 1
         print(res)
-    # print(f"{q} : ", DP[3279])
-
-            
-# sys.stdout.close()
