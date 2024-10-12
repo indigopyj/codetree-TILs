@@ -8,11 +8,11 @@ def count_alarm(c):
         count = 0
         while q:
             node, depth = q.pop(0)
+            # print(node, powers[node], depth)
             if visited[node]:
                 continue
-            if powers[node] < depth:
-                continue
-            count += 1
+            if powers[node] >= depth:
+                count += 1
             for child in children[node]:
                 if state[child]:
                     q.append((child, depth+1))
@@ -53,6 +53,7 @@ for _ in range(Q):
         child_2.append(c1)
         parents[c1] = p2
         parents[c2] = p1
+        # print(parents, children)
     elif cmd == 500:
         c = line[1]
         print(count_alarm(c))
