@@ -3,18 +3,16 @@ def count_alarm(c):
         visited = [False] * (N+1)
         q = []
         for child in children[node]:
-            if state[child]:
+            if state[child] and not visited[node]:
                 q.append((child, 1))
         count = 0
         while q:
             node, depth = q.pop(0)
             # print(node, powers[node], depth)
-            if visited[node]:
-                continue
             if powers[node] >= depth:
                 count += 1
             for child in children[node]:
-                if state[child]:
+                if state[child] and not visited[node]:
                     q.append((child, depth+1))
         return count
     n_room = bfs(c)
