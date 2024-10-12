@@ -10,7 +10,6 @@ left_powers = [[0] * 21 for _ in range(N+1)]
 
 def update(idx):
     left_powers[idx] = [0] * 21 # 초기화?
-    print("idx: ", idx)
     left_powers[idx][powers[idx]] += 1
     for child in children[idx]:
         if not state[child]:
