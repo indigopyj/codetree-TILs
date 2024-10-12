@@ -46,7 +46,7 @@ def up_dfs_2(node, power, value, child_list):
         if powers[c_node] >= power + depth:
             count += 1
     DP[node] = max(DP[node] + count * value, 0)
-    if state[parents[node]]:
+    if state[node]:
         up_dfs_2(parents[node], power+1, value, child_list)
 
 def change_state(c):
