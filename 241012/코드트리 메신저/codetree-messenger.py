@@ -35,8 +35,7 @@ def get_all_children(node):
         # if powers[node] >= depth:
         #     count += 1
         for child in children[node]:
-            if state[child]:
-                q.append((child, depth+1))
+            q.append((child, depth+1))
     return node_child
 
 def up_dfs_2(node, power, value, child_list):
@@ -47,12 +46,13 @@ def up_dfs_2(node, power, value, child_list):
         if powers[c_node] >= power + depth:
             count += 1
     DP[node] = max(DP[node] + count * value, 0)
-    up_dfs_2(parents[node], power+1, value, child_list)
+    if state[parents[node]]:
+        up_dfs_2(parents[node], power+1, value, child_list)
 
 def change_state(c):
     # print(DP)
     child_list = get_all_children(c)
-    # print("child_list ", child_list)
+    #print("child_list ", child_list)
     state[c] = not state[c]
     if state[c]:
         value = 1
@@ -136,3 +136,4 @@ for _ in range(Q):
     elif cmd == 500:
         c = line[1]
         print(DP[c])
+    # print(DP)
