@@ -69,9 +69,10 @@ def change_state(c):
     
 
 def change_power(c, power):
-    up_dfs(parents[c], powers[c]-1, -1)
-    powers[c] = power
-    up_dfs(parents[c], powers[c]-1, 1)
+    if state[c]:
+        up_dfs(parents[c], powers[c]-1, -1)
+        powers[c] = power
+        up_dfs(parents[c], powers[c]-1, 1)
 
 def change_parents(c1, c2):
     # print("before off: ", DP)
