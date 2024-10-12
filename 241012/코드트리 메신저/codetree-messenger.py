@@ -22,7 +22,8 @@ def up_dfs(node, power, value):
     if node == 0 or power < 0:
         return
     DP[node] = max(DP[node] + value, 0)
-    up_dfs(parents[node], power-1, value)
+    if state[node]:
+        up_dfs(parents[node], power-1, value)
 
 def get_all_children(node):
     # visited = [False] * (N+1)
