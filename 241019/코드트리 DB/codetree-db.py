@@ -1,105 +1,90 @@
-def search(arr, item, total):
-    if total == 0:
-        return 0,0
-    if total == 1:
-        if arr[0][1] > item:
-            return 0,0
-        elif arr[0][1] < item:
-            return 0,1
-        else:
-            return -1,0
-            
-    start = 0    
-    end = total - 1
-    
+class Node():
+    def __init__(self, is_end=False):
+        self.value = 0
+        self.is_end = is_end
+        self.children = dict()
 
-    while True:
-        mid = (start+end) // 2
-        # print(start, mid, end, total)
-        if arr[mid][1] > item:
-            end = mid-1
-        elif arr[mid][1] < item:
-            start = mid+1
-        else:
-            return -1, mid
-        if end < start:
-            return 0, start
+class Trie():
+    def __init__(self):
+        self.root = Node() # root node
+        self.values = []
         
-
-def insert_item(r_id, name, value, total):
-
-    flag, name_pos = search(names, name, total)
-    if flag < 0:
-        return False
-    flag, val_pos = search(values, value, total)
-    if flag < 0:
-        return False
+    def insert(self, name, value):
+        for n, v in self.values:
+            if n == name or v == value:
+                return 0
+        curr = self.root
+        for char in name:
+            if char not in curr.children:
+                curr.children[char] = Node()
+            curr = curr.children[char]
+        curr.is_end = True
+        curr.value = value
+        self.values.append((name, value))
+        self.values.sort(key=lambda x:x[1])
+        return 1
     
-    names.insert(name_pos, (r_id, name))
-    values.insert(val_pos, (r_id, value))
-    item_info[r_id] = (name, value)
-    # print(names, values)
-    return True
-
-def delete_item(r_id, name, total):
-    flag, name_pos = search(names, name, total)
-    if flag == 0:
-        return False
-    r_id = names[name_pos][0]
-    value = item_info[r_id][1]
-    names.remove((r_id, name))
-    values.remove((r_id, value))
-    del item_info[r_id]
-    # print(names, values)
-    return value
+    def delete(self, name):
+        curr = self.root
+        node = []
+        for char in name:
+            if char in curr.children:
+                node.append((curr, char)) 
+                curr = curr.children[char]
+        if curr.is_end:
+            value = curr.value
+            curr.is_end = False
+            curr.value = 0
+            self.values = [item for item in self.values if item[0] != name]
+            for n, c in node[::-1]: # 맨마지막노드는 포함안된 상태
+                if not curr.is_end and len(curr.children) == 0:
+                    del n.children[c]
+                    curr = n
+                else:
+                    break
+            return value
+        return 0
+                    
+    def rank(self, k):
+        if k <= len(self.values):
+            return self.values[k-1][0]
+        return None
     
-def rank_item(k):
-    r_id, val = values[k-1]
-    return item_info[r_id][0]
+    def sum(self, k):
+        total = 0
+        for n, v in self.values:
+            if v <= k:
+                total += v
+            else:
+                break
+        return total
     
-def sum_item(k, total):
-    flag, val_pos = search(values, k, total)
-    
-    if flag < 0:
-        val_pos += 1
-    return sum([item[1] for item in values[:val_pos]])
+    def init(self):
+        self.root = Node() # root node
+        self.values = []
+            
         
 
 Q = int(input())
+trie = Trie()
 for _ in range(Q):
     line = input().split()
-    # print(line)
     cmd = line[0]
+    
     if cmd == 'init':
-        names = []
-        values = []
-        item_info = dict()
-        r_id = 0
-        total = 0
+        trie.init()
+        
     elif cmd == 'insert':
         name, value = line[1], int(line[2])
-        result = insert_item(r_id, name, value, total)
-        if result == 1:
-            total += 1
-            r_id += 1
-            print(1)
-        else:
-            print(0)
+        print(trie.insert(name, value))
+        
     elif cmd == 'delete':
         name = line[1]
-        result = delete_item(r_id, name, total)
-        if result is False:
-            print(0)
-            continue
-        total -= 1
-        print(result)
+        print(trie.delete(name))
     elif cmd == 'rank':
         k = int(line[1])
-        if total < k:
-            print("None")
-        else:
-            print(rank_item(k))
+        print(trie.rank(k))
             
     elif cmd == 'sum':
         k = int(line[1])
-        print(sum_item(k, total))
+        print(trie.sum(k))
