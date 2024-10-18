@@ -31,6 +31,8 @@ class Trie():
             if char in curr.children:
                 node.append((curr, char)) 
                 curr = curr.children[char]
+            else:
+                return 0
         if curr.is_end:
             value = curr.value
             curr.is_end = False
