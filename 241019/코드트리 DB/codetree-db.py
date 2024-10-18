@@ -1,3 +1,5 @@
+import bisect
+
 class Node():
     def __init__(self, is_end=False):
         self.value = 0
@@ -21,7 +23,8 @@ class Trie():
         curr.is_end = True
         curr.value = value
         self.values.append((name, value))
-        self.values.sort(key=lambda x:x[1])
+        # self.values.sort(key=lambda x:x[1])
+        bisect.insort(self.values, (name, value))
         return 1
     
     def delete(self, name):
@@ -37,7 +40,10 @@ class Trie():
             value = curr.value
             curr.is_end = False
             curr.value = 0
-            self.values = [item for item in self.values if item[0] != name]
+            index = bisect.bisect_left(self.values, (name, 0))
+            if index < len(self.values) and self.values[index][0] == name:
+                self.values.pop(index)
+            # self.values = [item for item in self.values if item[0] != name]
             for n, c in node[::-1]: # 맨마지막노드는 포함안된 상태
                 if not curr.is_end and len(curr.children) == 0:
                     del n.children[c]
