@@ -59,14 +59,16 @@ def rank_item(k):
     
 def sum_item(k, total):
     flag, val_pos = search(values, k, total)
+    
     if flag < 0:
-        return 0
+        val_pos += 1
     return sum([item[1] for item in values[:val_pos]])
         
 
 Q = int(input())
 for _ in range(Q):
     line = input().split()
+    # print(line)
     cmd = line[0]
     if cmd == 'init':
         names = []
