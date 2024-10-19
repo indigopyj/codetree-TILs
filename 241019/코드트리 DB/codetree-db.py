@@ -51,27 +51,27 @@ class Tree:
         return total
 
 def insert(name, value):
-    for n, v in data_info.items():
-        if name == n:
-            return 0
-        if value == v:
-            return 0
+    if name in data_info:
+        return 0
+
+    if value in value_count and value_count[value] > 0:
+        return 0
     
     data_info[name] = value
+    value_count[value] = 1
     tree.update(tree.root, value, value)
     return 1
     
 def delete(name):
     flag = False
     value = 0
-    for n, v in data_info.items():
-        if name == n:
-            flag = True
-            value = v
-            break
-    if not flag:
+    try:
+        value = data_info[name]
+    except KeyError:
         return 0
+
     del data_info[name]
+    del value_count[value]
     tree.update(tree.root, value, 0)
     return value
 
@@ -94,6 +94,7 @@ for _ in range(Q):
     if cmd == 'init':
         tree = Tree(start=0, end=10**9)
         data_info = dict()
+        value_count = dict()
         
     elif cmd == 'insert':
         name, value = line[1], int(line[2])
