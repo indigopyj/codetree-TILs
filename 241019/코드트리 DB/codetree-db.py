@@ -23,10 +23,14 @@ class Tree:
             if node.left is None:
                 node.left = Node(node.start, mid)
             self.update(node.left, idx, value)
+            if node.left.sum == 0:
+                node.left = None
         else:
             if node.right is None:
                 node.right = Node(mid+1, node.end)
             self.update(node.right, idx, value)
+            if node.right.sum == 0:
+                node.right = None
         
         node.sum = 0
         if node.right is not None:
