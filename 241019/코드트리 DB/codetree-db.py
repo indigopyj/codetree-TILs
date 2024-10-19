@@ -1,3 +1,4 @@
+import bisect
 class Node:
     def __init__(self, start, end):
         self.start = start
@@ -51,14 +52,15 @@ class Tree:
         return total
 
 def insert(name, value):
-    if name in data_info:
-        return 0
-
-    if value in value_count and value_count[value] > 0:
-        return 0
+    for n, v in name_dict.items():
+        if name == n:
+            return 0
+        if value == v:
+            return 0
     
-    data_info[name] = value
-    value_count[value] = 1
+    name_dict[name] = value
+    value_dict[value] = name
+    bisect.insort(sorted_values, value)
     tree.update(tree.root, value, value)
     return 1
     
@@ -66,21 +68,24 @@ def delete(name):
     flag = False
     value = 0
     try:
-        value = data_info[name]
+        value = name_dict[name]
     except KeyError:
         return 0
-
-    del data_info[name]
-    del value_count[value]
+    if not flag:
+        return 0
+    del name_dict[name]
+    del value_dict[value]
+    sorted_values.remove(value)
     tree.update(tree.root, value, 0)
     return value
 
 def rank(k):
-    if k > len(data_info):
+    if k > len(sorted_values):
         return None
-    sort_dict = sorted(data_info.items(), key=lambda x:x[1])
-    k, v = sort_dict[k-1]
-    return k
+    return value_dict[sorted_values[k-1]]
+    # sort_dict = sorted(data_info.items(), key=lambda x:x[1])
+    # k, v = sort_dict[k-1]
+    # return k
 
 def sum(k):
     return tree.range_sum(tree.root, 0, k)
@@ -93,8 +98,9 @@ for _ in range(Q):
     
     if cmd == 'init':
         tree = Tree(start=0, end=10**9)
-        data_info = dict()
-        value_count = dict()
+        name_dict = dict()
+        value_dict = dict()
+        sorted_values = []
         
     elif cmd == 'insert':
         name, value = line[1], int(line[2])
