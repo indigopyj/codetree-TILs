@@ -81,6 +81,7 @@ class Tree:
 
 def insert(name, value):
     global entry_count
+    # print(name_to_index, used_vals)
     if name in name_to_index or value in used_vals:
         return 0
     entry_count += 1
@@ -99,11 +100,13 @@ def delete(name):
         return 0
     
     idx = name_to_index[name]
-    #print(name, idx, values)
+    # print(names[:10], idx, values[:10])
     names[idx] = ''
     val = values[idx]
     used_vals.discard(val)
     values[idx] = 0
+    del name_to_index[name]
+    # print(names[:10], idx, values[:10])
     
     tree.update(tree.root, val, idx, 0, 0)
     return val
