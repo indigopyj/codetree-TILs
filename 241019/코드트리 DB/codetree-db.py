@@ -65,14 +65,12 @@ def insert(name, value):
     return 1
     
 def delete(name):
-    flag = False
     value = 0
     try:
         value = name_dict[name]
     except KeyError:
         return 0
-    if not flag:
-        return 0
+
     del name_dict[name]
     del value_dict[value]
     sorted_values.remove(value)
@@ -95,7 +93,7 @@ Q = int(input())
 for _ in range(Q):
     line = input().split()
     cmd = line[0]
-    
+    #print(line)
     if cmd == 'init':
         tree = Tree(start=0, end=10**9)
         name_dict = dict()
