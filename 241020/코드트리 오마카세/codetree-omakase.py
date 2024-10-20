@@ -20,28 +20,25 @@ def update_eattime(name):
     
 def eat_sushi(t):
     n_sushi = 0
-    n_people = len(people)
+    n_people = 0
     
     for name, s_list in sushi.items():
         eaten_sushi = 0
-        n_sushi += len(s_list)
-        if name in people:
-            count = 0
-            total_s = len(s_list)
-            while count < total_s:
-                s = s_list.pop(0)
-                if s[-1] <= t:
-                    eaten_sushi += 1
-                else:
-                    s_list.append(s)
-                count += 1
-            people[name] -= eaten_sushi
-            n_sushi -= eaten_sushi
-            
-            if people[name] == 0:
-                n_people -= 1
-                del people[name]
-                del people_time[name]
+        p_t, p_x = people_time[name]
+        if p_t > t: # 그 사람이 오기전인 경우 -> 아무것도 안먹힌 상태
+            n_sushi += sum([1 for s in s_list if s[0] <= t])
+        else: # 그 사람이 온 상태
+            n_eat = people[name]
+            for s in s_list:
+                if s[0] > t: # 스시가 생기기 전
+                    continue
+                if s[-1] > t: # 스시가 먹히기 전
+                    n_sushi += 1
+                    continue
+                n_eat -= 1
+            if n_eat > 0:
+                n_people += 1
+
     return n_people, n_sushi
             
                 
@@ -51,20 +48,27 @@ def eat_sushi(t):
 sushi = defaultdict(list)
 people = dict()
 people_time = dict()
+photo_time = []
 for _ in range(Q):
     line = input().split()
     cmd = int(line[0])
     if cmd == 100:
         t, x, name = line[1:]
         sushi[name].append([int(t), int(x), -1])
-        update_eattime(name)
+        
     elif cmd == 200:
         t, x, name, n = line[1:]
         people[name] = int(n)
         people_time[name] = (int(t),int(x))
-        update_eattime(name)
+        
     elif cmd == 300:
         t = int(line[1])
-        res = eat_sushi(t)
-        print(res[0], res[1])
-    #print(sushi, people)
+        photo_time.append(t)
+
+for name in people:
+    update_eattime(name)
+#print(sushi, people, people_time)
+
+for t in photo_time:
+    res = eat_sushi(t)
+    print(res[0], res[1])
