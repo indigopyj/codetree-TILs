@@ -6,7 +6,7 @@ def update_eattime(name):
         return
     p_t, p_x = people_time[name]
     for i, s in enumerate(sushi[name]):
-        if name not in people or s[2] >= 0:
+        if name not in people:
             continue
         s_t = s[0]
         s_x = s[1]
@@ -30,7 +30,6 @@ def eat_sushi(t):
             total_s = len(s_list)
             while count < total_s:
                 s = s_list.pop(0)
-                #print(s)
                 if s[-1] <= t:
                     eaten_sushi += 1
                 else:
