@@ -1,118 +1,74 @@
-from collections import defaultdict
-L, Q = map(int, input().split())
-
-def update_eattime(name):
-    p_t, p_x = people_time[name]
-    for i, s in enumerate(sushi[name]):
-        if name not in people:
-            continue
-        s_t = s[0] # 스시가 처음 도착한 시간
-        s_x = s[1]
-        
-        if s_t < p_t:
-            curr_pos = ((p_t - s_t) + s_x ) % L
-            eat_time = (p_t + (p_x - curr_pos+L) % L) # 스시가 먹히는 시간
-        else:
-            eat_time = (p_x - s_x + L) % L + s_t
-        sushi[name][i] = [s_t, s_x, eat_time]
-    
-def eat_sushi(t):
-    n_sushi = 0
-    n_people = 0
-    
-    for name, s_list in sushi.items():
-        eaten_sushi = 0
-        p_t, p_x = people_time[name]
-        # if p_t > t: # 그 사람이 오기전인 경우 -> 아무것도 안먹힌 상태
-        #     n_sushi += sum([1 for s in s_list if s[0] <= t])
-        # 그 사람이 온 상태
-        n_eat = people[name]
-        for s in s_list:
-            if s[0] > t: # 스시가 생기기 전
-                continue
-            if s[-1] > t: # 스시가 먹히기 전
-                n_sushi += 1
-                continue
-            if p_t <= t:
-                n_eat -= 1
-        if p_t <= t and n_eat > 0:
-            n_people += 1
-
-    return n_people, n_sushi
-            
-                
 class Query:
-    def __init__(self, cmd, t, x=-1, name=None, n=None):
+    def __init__(self, cmd, t, x=-1, name=None, n=-1):
         self.cmd = cmd
         self.t = t
         self.x = x
         self.name = name
         self.n = n
-              
-    
-names = []
-people_in = dict()
-people_out = dict()
-people_pos = dict()
-Queries = []
-sushi_queries = dict()
 
+L, Q = map(int, input().split())
+queries = []
+sushi_queries = []
+people_in = dict()
+people_pos = dict()
+people_out = dict()
 for _ in range(Q):
     line = input().split()
     cmd = int(line[0])
     if cmd == 100:
-        t, x, name = line[1:]
-        t, x = int(t), int(x)
-        q = Query(cmd, t, x, name)
-        Queries.append(q)
-        if name not in sushi_queries:
-            sushi_queries[name] = []
-        sushi_queries[name].append(q)
-        
-        
+        t, x = map(int, line[1:-1])
+        name = line[-1]
+        queries.append(Query(cmd, t, x, name))
+        sushi_queries.append(Query(cmd, t, x, name))
     elif cmd == 200:
-        t, x, name, n = line[1:]
-        t, x, n = int(t), int(x), int(n)
-        Queries.append(Query(cmd, t, x, name, n))
-        names.append(name)
-        people_pos[name] = x
+        t, x = map(int, line[1:3])
+        name = line[3]
+        n = int(line[4])
+        queries.append(Query(cmd, t, x, name, n))
         people_in[name] = t
-        
+        people_pos[name] = x
     elif cmd == 300:
         t = int(line[1])
-        Queries.append(Query(cmd, t))
+        queries.append(Query(cmd, t))
 
-for name in names: # 각자 떠나는 시간 구하기
-    people_out[name] = 0
-    for q in sushi_queries[name]:
-        p_t = people_in[name]
-        p_x = people_pos[name]
+for q in sushi_queries:
+    name = q.name
+    if name not in people_out:
+        people_out[name] = 0
+    p_t = people_in[name]
+    p_x = people_pos[name]
+    s_t = q.t
+    s_x = q.x
+    if p_t < s_t: # 사람이 먼저 도착
+        eat_time = s_t + (p_x - s_x + L) % L
         
-        s_t = q.t
-        s_x = q.x
-        if s_t < p_t:
-            curr_pos = ((p_t - s_t) + s_x ) % L
-            eat_time = (p_t + (p_x - curr_pos+L) % L) # 스시가 먹히는 시간
-        else:
-            eat_time = (p_x - s_x + L) % L + s_t
-        
-        people_out[name] = max(people_out[name], eat_time)
-        Queries.append(Query(111, eat_time, name=name))
+    else: # 사람이 나중에 도착
+        moved_dist = (p_t - s_t)
+        need_time = p_x - (s_x + moved_dist) % L
+        eat_time = p_t + need_time
+    #print(name, eat_time)
+    queries.append(Query(111, eat_time, name=name))
+    people_out[name] = max(people_out[name], eat_time)
 
-for name in names:
-    Queries.append(Query(222, people_out[name], name=name))
+for name, time in people_out.items():
+    queries.append(Query(222, time, name=name))
     
-total_sushi = 0
-total_people = 0
-Queries.sort(key=lambda x:(x.t, x.cmd))
-for q in Queries:
+queries.sort(key=lambda x:(x.t, x.cmd))
+
+# for q in queries:
+#     print("Query")
+#     print(q.cmd, q.t, q.x, q.name, q.n)
+
+n_people = 0
+n_sushi = 0
+for q in queries:
     if q.cmd == 100:
-        total_sushi+= 1
+        n_sushi += 1
     elif q.cmd == 200:
-        total_people += 1
+        n_people += 1
     elif q.cmd == 111:
-        total_sushi -= 1
+        n_sushi -= 1
     elif q.cmd == 222:
-        total_people -= 1
+        n_people -= 1
     else:
-        print(total_people, total_sushi)
+        print(n_people, n_sushi)
