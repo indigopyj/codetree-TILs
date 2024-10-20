@@ -12,8 +12,8 @@ def update_eattime(name):
         s_x = s[1]
         
         if s_t < p_t:
-            curr_pos = ((p_t - s_t+L)%L + s_x ) % L
-            eat_time = (p_t + p_x - curr_pos)
+            curr_pos = ((p_t - s_t) + s_x ) % L
+            eat_time = (p_t + (p_x - curr_pos+L) % L)
         else:
             eat_time = (p_x - s_x + L) % L + s_t
         sushi[name][i] = [s_t, s_x, eat_time]
@@ -21,10 +21,10 @@ def update_eattime(name):
 def eat_sushi(t):
     n_sushi = 0
     n_people = len(people)
+    
     for name, s_list in sushi.items():
         eaten_sushi = 0
         n_sushi += len(s_list)
-        
         if name in people:
             count = 0
             total_s = len(s_list)
@@ -37,7 +37,6 @@ def eat_sushi(t):
                 count += 1
             people[name] -= eaten_sushi
             n_sushi -= eaten_sushi
-            
             
             if people[name] == 0:
                 n_people -= 1
