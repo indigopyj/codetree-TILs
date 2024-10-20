@@ -6,12 +6,12 @@ def update_eattime(name):
     for i, s in enumerate(sushi[name]):
         if name not in people:
             continue
-        s_t = s[0]
+        s_t = s[0] # 스시가 처음 도착한 시간
         s_x = s[1]
         
         if s_t < p_t:
             curr_pos = ((p_t - s_t) + s_x ) % L
-            eat_time = (p_t + (p_x - curr_pos+L) % L)
+            eat_time = (p_t + (p_x - curr_pos+L) % L) # 스시가 먹히는 시간
         else:
             eat_time = (p_x - s_x + L) % L + s_t
         sushi[name][i] = [s_t, s_x, eat_time]
@@ -41,33 +41,78 @@ def eat_sushi(t):
     return n_people, n_sushi
             
                 
-          
+class Query:
+    def __init__(self, cmd, t, x=-1, name=None, n=None):
+        self.cmd = cmd
+        self.t = t
+        self.x = x
+        self.name = name
+        self.n = n
+              
     
+names = []
+people_in = dict()
+people_out = dict()
+people_pos = dict()
+Queries = []
+sushi_queries = dict()
 
-sushi = defaultdict(list)
-people = dict()
-people_time = dict()
-photo_time = []
 for _ in range(Q):
     line = input().split()
     cmd = int(line[0])
     if cmd == 100:
         t, x, name = line[1:]
-        sushi[name].append([int(t), int(x), -1])
+        t, x = int(t), int(x)
+        q = Query(cmd, t, x, name)
+        Queries.append(q)
+        if name not in sushi_queries:
+            sushi_queries[name] = []
+        sushi_queries[name].append(q)
+        
         
     elif cmd == 200:
         t, x, name, n = line[1:]
-        people[name] = int(n)
-        people_time[name] = (int(t),int(x))
+        t, x, n = int(t), int(x), int(n)
+        Queries.append(Query(cmd, t, x, name, n))
+        names.append(name)
+        people_pos[name] = x
+        people_in[name] = t
         
     elif cmd == 300:
         t = int(line[1])
-        photo_time.append(t)
+        Queries.append(Query(cmd, t))
 
-for name in people:
-    update_eattime(name)
-#print(sushi, people, people_time)
+for name in names: # 각자 떠나는 시간 구하기
+    people_out[name] = 0
+    for q in sushi_queries[name]:
+        p_t = people_in[name]
+        p_x = people_pos[name]
+        
+        s_t = q.t
+        s_x = q.x
+        if s_t < p_t:
+            curr_pos = ((p_t - s_t) + s_x ) % L
+            eat_time = (p_t + (p_x - curr_pos+L) % L) # 스시가 먹히는 시간
+        else:
+            eat_time = (p_x - s_x + L) % L + s_t
+        
+        people_out[name] = max(people_out[name], eat_time)
+        Queries.append(Query(111, eat_time, name=name))
 
-for t in photo_time:
-    res = eat_sushi(t)
-    print(res[0], res[1])
+for name in names:
+    Queries.append(Query(222, people_out[name], name=name))
+    
+total_sushi = 0
+total_people = 0
+Queries.sort(key=lambda x:(x.t, x.cmd))
+for q in Queries:
+    if q.cmd == 100:
+        total_sushi+= 1
+    elif q.cmd == 200:
+        total_people += 1
+    elif q.cmd == 111:
+        total_sushi -= 1
+    elif q.cmd == 222:
+        total_people -= 1
+    else:
+        print(total_people, total_sushi)
