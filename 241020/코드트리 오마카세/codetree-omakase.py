@@ -42,7 +42,7 @@ for name in names:
         p_x = people_pos[name]
         s_t = q.t
         s_x = q.x
-        if p_t <= s_t: # 사람이 먼저 도착
+        if p_t < s_t: # 사람이 먼저 도착
             eat_time = s_t + (p_x - s_x + L) % L
             
         else: # 사람이 나중에 도착
