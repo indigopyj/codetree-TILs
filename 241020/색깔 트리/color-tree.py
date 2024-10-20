@@ -8,20 +8,33 @@ class Node:
         self.children = []
         self.diff_color.add(color)
         self.value = 1
-        
+
+def getValue(id):
+    node = node_dict[id]       
+    curr_color_list = [0] * 5
+    curr_color_list[node.color - 1] = 1
+    value = 0
+    for c in node.children:
+        c_val, c_colorlist = getValue(c)
+        for i in range(5):
+            curr_color_list[i] += c_colorlist[i]
+        value += c_val
+    curr_val = sum([1 for c in curr_color_list if c > 0])
+    value += curr_val**2
+    #print(f"{id}: {curr_val}")
+    return value, curr_color_list
+    
         
 def update_value(m_id):
     node = node_dict[m_id]
-    if node.p_id == -1:
-        return
     nnode = node_dict[node.p_id]
-    # print(nnode.diff_color, nnode.value)
+    print(nnode.diff_color, nnode.value)
     while True:
         nnode.diff_color = set([nnode.color])
         for c in nnode.children:
             nnode.diff_color = nnode.diff_color.union(node_dict[c].diff_color)
         nnode.value = len(nnode.diff_color)
-        # print(nnode.diff_color, nnode.value)
+        print(nnode.diff_color, nnode.value)
         if nnode.p_id == -1:
             break
         nnode = node_dict[nnode.p_id]
@@ -45,7 +58,7 @@ def add_node(m_id, p_id, color, depth):
     
     node_dict[m_id] = node
     node_dict[p_id].children.append(m_id)
-    update_value(m_id)
+    #update_value(m_id)
 
 def change_color(m_id, color):
     node = node_dict[m_id]
@@ -55,17 +68,11 @@ def change_color(m_id, color):
     for child in node.children:
         change_color(child, color)
 
-def calculate_value(trees):
+def calculate_value(root_id):
     total = 0
     for root_id in trees:
-        q = [root_id]
-        while q:
-            id = q.pop(0)
-            node = node_dict[id]
-            # print(id, "value: ", node.value)
-            total += node.value**2
-            if len(node.children) != 0:
-                q.extend(node.children)
+        val, _ =  getValue(root_id)
+        total += val
     return total
             
 
@@ -81,11 +88,11 @@ for _ in range(Q):
         add_node(m_id, p_id, color, depth)
         if p_id == -1:
             trees.append(m_id)
-        # print(node_dict)
+        #print(node_dict)
     elif cmd == 200:
         m_id, color = line[1:]
         change_color(m_id, color)
-        update_value(m_id)
+        #update_value(m_id)
     elif cmd == 300:
         m_id = line[1]
         print(node_dict[m_id].color)
