@@ -2,8 +2,6 @@ from collections import defaultdict
 L, Q = map(int, input().split())
 
 def update_eattime(name):
-    if name not in people_time:
-        return
     p_t, p_x = people_time[name]
     for i, s in enumerate(sushi[name]):
         if name not in people:
@@ -25,19 +23,20 @@ def eat_sushi(t):
     for name, s_list in sushi.items():
         eaten_sushi = 0
         p_t, p_x = people_time[name]
-        if p_t > t: # 그 사람이 오기전인 경우 -> 아무것도 안먹힌 상태
-            n_sushi += sum([1 for s in s_list if s[0] <= t])
-        else: # 그 사람이 온 상태
-            n_eat = people[name]
-            for s in s_list:
-                if s[0] > t: # 스시가 생기기 전
-                    continue
-                if s[-1] > t: # 스시가 먹히기 전
-                    n_sushi += 1
-                    continue
+        # if p_t > t: # 그 사람이 오기전인 경우 -> 아무것도 안먹힌 상태
+        #     n_sushi += sum([1 for s in s_list if s[0] <= t])
+        # 그 사람이 온 상태
+        n_eat = people[name]
+        for s in s_list:
+            if s[0] > t: # 스시가 생기기 전
+                continue
+            if s[-1] > t: # 스시가 먹히기 전
+                n_sushi += 1
+                continue
+            if p_t <= t:
                 n_eat -= 1
-            if n_eat > 0:
-                n_people += 1
+        if p_t <= t and n_eat > 0:
+            n_people += 1
 
     return n_people, n_sushi
             
