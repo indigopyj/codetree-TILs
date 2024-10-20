@@ -42,6 +42,7 @@ def eat_sushi(t):
             if people[name] == 0:
                 n_people -= 1
                 del people[name]
+                del people_time[name]
     return n_people, n_sushi
             
                 
