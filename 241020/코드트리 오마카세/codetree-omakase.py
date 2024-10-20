@@ -25,7 +25,7 @@ def eat_sushi(t):
         eaten_sushi = 0
         n_sushi += len(s_list)
         
-        if len(s_list) != 0 and name in people:
+        if name in people:
             count = 0
             total_s = len(s_list)
             while count < total_s:
