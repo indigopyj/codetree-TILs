@@ -42,13 +42,18 @@ for name in names:
         p_x = people_pos[name]
         s_t = q.t
         s_x = q.x
-        if p_t <= s_t: # 사람이 먼저 도착
-            eat_time = s_t + (p_x - s_x + L) % L
+        if s_t < p_t:
+            curr_pos = ((p_t - s_t) + s_x ) % L
+            eat_time = (p_t + (p_x - curr_pos+L) % L) # 스시가 먹히는 시간
+        else:
+            eat_time = (p_x - s_x + L) % L + s_t
+        # if p_t <= s_t: # 사람이 먼저 도착
+        #     eat_time = s_t + (p_x - s_x + L) % L
             
-        else: # 사람이 나중에 도착
-            moved_dist = (p_t - s_t)
-            need_time = p_x - (s_x + moved_dist) % L
-            eat_time = p_t + need_time
+        # else: # 사람이 나중에 도착
+        #     moved_dist = (p_t - s_t)
+        #     need_time = p_x - (s_x + moved_dist) % L
+        #     eat_time = p_t + need_time
         #print(name, eat_time)
         queries.append(Query(111, eat_time, name=name))
         people_out[name] = max(people_out[name], eat_time)
